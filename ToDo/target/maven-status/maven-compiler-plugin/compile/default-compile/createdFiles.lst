@@ -1,0 +1,15 @@
+com/bridgelabz/model/User.class
+com/bridgelabz/controllers/UserController.class
+com/bridgelabz/service/UserServiceImpl.class
+com/bridgelabz/validation/EncryptPassword.class
+com/bridgelabz/model/DTO.class
+com/bridgelabz/email/EmailProperties.class
+com/bridgelabz/Dao/userDao.class
+com/bridgelabz/validation/UserValidation.class
+com/bridgelabz/Dao/UserDaoImpl$MyMapper.class
+com/bridgelabz/service/MailService.class
+com/bridgelabz/util/Token.class
+com/bridgelabz/ResponseDTO/RegisterErrors.class
+com/bridgelabz/ResponseDTO/CustomResponse.class
+com/bridgelabz/Dao/UserDaoImpl.class
+com/bridgelabz/service/UserService.class
