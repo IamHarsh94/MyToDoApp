@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.sql.Types;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
-/*import javax.sql.DataSource;*/
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,14 +25,13 @@ import com.bridgelabz.todo.user.model.User;
 
 
 public class notesDaoImpl implements NotesDao{
-	/*@Autowired
-	private DataSource dataSource;*/
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	public void saveNote(Note note) {
-		String INSERT_SQL = "insert into NOTES values(?,?,?,?,?,?)";	
+		String INSERT_SQL = "insert into NOTES values(?,?,?,?,?,?,?,?,?)";	
 		KeyHolder holder = new GeneratedKeyHolder();
 		jdbcTemplate.update(new PreparedStatementCreator() {
 
@@ -42,10 +44,24 @@ public class notesDaoImpl implements NotesDao{
 				ps.setDate(4, new Date(note.getCreateDate().getTime()));
 				ps.setDate(5,new Date(note.getLastUpdateDate().getTime()));
 				ps.setInt(6, note.getUser().getId());
+				ps.setString(7,note.getColor());
+				ps.setInt(8, note.getStatus());
+				ps.setDate(9, new Date(note.getReminder().getTime()));
+				/*java.util.Date today = new java.util.Date();
+				java.sql.Timestamp timestamp = new java.sql.Timestamp(today.getTime());
+				ps.setTimestamp(9, timestamp);*/
 				return ps;
 			}
-		}, holder);
 
+			/*private java.util.Date cal() {
+				
+				Calendar calendar = Calendar.getInstance();
+				calendar.set(1991, 12, 17);
+			
+				return calendar;
+			}*/
+		}, holder);
+		
 		int noteId = holder.getKey().intValue();
 		note.setId(noteId);
 	}
@@ -53,17 +69,21 @@ public class notesDaoImpl implements NotesDao{
 	@Override
 	public void deleteNote(int noteId) {
 		int num=jdbcTemplate.update("DELETE FROM NOTES WHERE id=?", new Object[] { noteId });
-		if(num!=1) {
+		if(num==0) {
 			throw new DatabaseException();
 		}
-
 	}
-
+	
+	
+	
 	@Override
 	public void updateNote(Note note) {
-		String sql = "update NOTES set title=?,description=?,lastUpdateDate=? where id=?";
-		int num = jdbcTemplate.update(sql, new Object[] {note.getTitle(),note.getDescription(),note.getLastUpdateDate(),note.getId()});
-		if( num != 1) {
+		
+
+		String sql = "update NOTES set title=?,description=?,lastUpdateDate=?,color=?,status=?,reminder=? where id=?";
+		int num = jdbcTemplate.update(sql, new Object[] {note.getTitle(),note.getDescription(),
+				note.getLastUpdateDate(),note.getColor(),note.getStatus(),new Date(note.getReminder().getTime()),note.getId()});
+		if( num == 0) {
 			throw new DatabaseException();
 		}
 		
@@ -73,18 +93,22 @@ public class notesDaoImpl implements NotesDao{
 	public Note getNoteByNoteId(int noteId) {
 		String sql = "select * from NOTES where id=?";
 		List<Note> list = jdbcTemplate.query(sql, new Object[] {noteId}, new MyMapperClass());
+		
 		if(list.size()<=0) {
+			System.out.println("in database row not update");
 			throw new DatabaseException();
 		}
+		System.out.println("in db row update");
 		return list.get(0);
 	}
-
+	
 	@Override
 	public List<Note> getNotesByUserId(int userId) {
 		String sql = "select * from NOTES where userId=?";
 		List<Note> list = jdbcTemplate.query(sql, new Object[] {userId}, new MyMapperClass());
 		return list;
 	}
+	
 }
 class MyMapperClass implements org.springframework.jdbc.core.RowMapper<Note> {
 	public Note mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -94,7 +118,21 @@ class MyMapperClass implements org.springframework.jdbc.core.RowMapper<Note> {
 		note.setDescription(rs.getString("description"));
 		note.setCreateDate(rs.getDate("createDate"));
 		note.setLastUpdateDate(rs.getDate("lastUpdateDate"));
+		note.setStatus(rs.getInt("status"));
+		note.setColor(rs.getString("color"));
 		
+//		java.sql.Timestamp dbSqlTimestamp = rs.getDate("reminder");
+//		System.out.println("time stamp"+dbSqlTimestamp);
+//		
+//		Date date = new Date(dbSqlTimestamp.getTime());
+//		System.out.println("in date formate "+date);
+//		
+//		SimpleDateFormat simpleDate = new SimpleDateFormat();
+//		System.out.println("in simple date formate "+simpleDate.format(dbSqlTimestamp));
+//		
+//		
+//		note.setReminder(rs.getDate("reminder"));
+		System.out.println("thank god date "+rs.getDate("reminder"));
 		int userId = rs.getInt("userId");
 		User user = new User();
 		user.setId(userId);

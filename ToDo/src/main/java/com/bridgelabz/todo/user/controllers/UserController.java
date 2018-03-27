@@ -31,18 +31,20 @@ public class UserController {
 	private UserService userService;
 	@Autowired 
 	private UserValidation validator;
+	
 	@RequestMapping(value="login",method =RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
+	
 	public ResponseEntity<?> loginUser(@RequestBody DTO DTOuser, HttpServletResponse res) {
 		String token=userService.userLogin(DTOuser);
 		if(token!=null) {
-			res.setHeader("authtoken",token);
+			res.setHeader("Authorization",token);
 			response.setMessage("User successfully login");
 			response.setStatusCode(200);
 			return new ResponseEntity<CustomResponse>(response,HttpStatus.OK);
 		}
 		response.setMessage("User login failed");
-		response.setStatusCode(409);
-		return new ResponseEntity<CustomResponse>(response,HttpStatus.NO_CONTENT);
+		response.setStatusCode(400);
+		return new ResponseEntity<CustomResponse>(response,HttpStatus.OK);
 	}
 	@RequestMapping(value="register",method=RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> registrationUser( HttpServletRequest req,@RequestBody DTO DTOuser, BindingResult BindResult) {
@@ -50,8 +52,7 @@ public class UserController {
 		List<FieldError> error=BindResult.getFieldErrors();
 		if(BindResult.hasErrors()) {
 			response.setMessage("Enter field properly");
-			response.setStatusCode(409);
-			response.setStatusCode(201);			
+			response.setStatusCode(400);
 			return new ResponseEntity<CustomResponse>(response, HttpStatus.CONFLICT);
 		}
 		try {
@@ -59,8 +60,8 @@ public class UserController {
 			String requestUrl = url.substring(0,url.lastIndexOf("/"))+"/registerConfirmation/";
 			if(userService.userRegistration(DTOuser,requestUrl)) {
 				response.setMessage("user register success");
-				response.setStatusCode(100);
-				return new ResponseEntity<CustomResponse>(response, HttpStatus.CREATED);
+				response.setStatusCode(200);
+				return new ResponseEntity<CustomResponse>(response, HttpStatus.OK);
 			}else {
 				errorRes.setMessage("Enter field properly");
 				errorRes.setErrors(error);

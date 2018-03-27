@@ -9,7 +9,7 @@ public class DatabaseException extends RuntimeException{
 	public DatabaseException () {
 		super("database exception:row not updated");
 	}
-
+	
 	public CustomResponse getResponse() {
 		CustomResponse response = new CustomResponse();
 		response.setMessage(this.getMessage());

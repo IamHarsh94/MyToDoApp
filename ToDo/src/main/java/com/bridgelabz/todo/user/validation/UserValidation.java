@@ -26,10 +26,12 @@ public class UserValidation implements Validator {
 	@Override
 	public void validate(Object obj, Errors error) {
 		DTO DTOuser = (DTO) obj;
+		
 		ValidationUtils.rejectIfEmptyOrWhitespace(error, "fullName", "fullname is require");
+		
 		if (DTOuser.getFullName()!= null && !DTOuser.getFullName().isEmpty())
 		{
-			System.out.println("in fullname");	
+			
 			pattern = Pattern.compile(STRING_PATTERN);
 			matcher = pattern.matcher(DTOuser.getFullName());
 			if (!matcher.matches()) {
@@ -37,6 +39,7 @@ public class UserValidation implements Validator {
 			}
 		}
 		ValidationUtils.rejectIfEmptyOrWhitespace(error, "userEmail", "email is require");
+		
 		if ( DTOuser.getUserEmail()!= null && !DTOuser.getUserEmail().isEmpty()) 
 		{
 			System.out.println("in usermail");

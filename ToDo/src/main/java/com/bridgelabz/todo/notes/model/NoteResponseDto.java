@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class NoteResponseDto {
 
-	private int nodeId;
+	private int noteId;
 
 	private String title;
 
@@ -13,26 +13,62 @@ public class NoteResponseDto {
 	private Date createDate;
 
 	private Date lastUpdateDate;
-
+	
+	private String color;
+	
+	private int status;
+	
+	private Date reminder;
+	
 	public NoteResponseDto() {
 
 	}
-
+	
 	public NoteResponseDto(Note note) {
-		this.nodeId = note.getId();
+		this.noteId = note.getId();
 		this.title = note.getTitle();
 		this.description =note.getDescription();
 		this.createDate = note.getCreateDate();
 		this.lastUpdateDate= note.getLastUpdateDate();
+		this.color = note.getColor();
+		this.status=note.getStatus();
+		this.reminder =note.getReminder();
 	}
 
-	public int getNodeId() {
-		return nodeId;
+	
+
+	public Date getReminder() {
+		return reminder;
 	}
 
-	public void setNodeId(int nodeId) {
-		this.nodeId = nodeId;
+	public void setReminder(Date reminder) {
+		this.reminder = reminder;
 	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	public int getNoteId() {
+		return noteId;
+	}
+
+	public void setNoteId(int noteId) {
+		this.noteId = noteId;
+	}
+
 
 	public String getTitle() {
 		return title;

@@ -46,8 +46,11 @@ public class UserServiceImpl implements UserService{
 	@SuppressWarnings("static-access")
 	@Override
 	public String userLogin(DTO DTOuser){
+		
 		User user = new User(DTOuser.getUserEmail(), DTOuser.getPassWord());
+		
 		User userObj =userDao.getUserByEmailId(user.getUserEmail());
+		
 		if(userObj!=null && userObj.isActive() && BCrypt.checkpw(user.getPassWord(), userObj.getPassWord())) {
 			return userToken.generateToken(userObj.getId());
 		}
@@ -94,5 +97,8 @@ public class UserServiceImpl implements UserService{
 		User user = userDao.getUserByUUID(userUUID);
 		user.setActive(true);
 		return (userDao.activateUser(user)==true)?true:false; 
+	}
+	public User fetchUserByUserId(int userId) {
+		return userDao.getUserById(userId);
 	}
 }

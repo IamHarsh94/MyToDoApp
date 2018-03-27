@@ -2,7 +2,7 @@ package com.bridgelabz.todo.user.ResponseDTO;
 
 public class CustomResponse {
 	private String message;
-	private int statusCode;
+	private int status;
 	public String getMessage() {
 		return message;
 	}
@@ -10,9 +10,9 @@ public class CustomResponse {
 		this.message = message;
 	}
 	public int getStatusCode() {
-		return statusCode;
+		return status;
 	}
 	public void setStatusCode(int statusCode) {
-		this.statusCode = statusCode;
+		this.status = statusCode;
 	}
 }

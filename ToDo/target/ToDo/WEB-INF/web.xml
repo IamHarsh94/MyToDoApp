@@ -5,7 +5,19 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
   
-   <servlet>
+  <filter>
+  	<filter-name>CORSFilter</filter-name>
+  	<display-name>CORSFilter</display-name>
+  	<description></description>
+  	<filter-class>com.bridgelabz.todo.interceptor.CORSFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>CORSFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+  
+  <servlet>
       <servlet-name>springConfig</servlet-name>
       <servlet-class>
          org.springframework.web.servlet.DispatcherServlet

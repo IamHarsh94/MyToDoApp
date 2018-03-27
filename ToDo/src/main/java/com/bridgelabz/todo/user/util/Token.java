@@ -26,6 +26,7 @@ public class Token {
 		int id = 0;
 		Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
 		id = Integer.parseInt(claims.getId());
+		
 		return id;
 	}
 }

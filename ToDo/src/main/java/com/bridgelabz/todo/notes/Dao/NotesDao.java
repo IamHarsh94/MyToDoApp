@@ -8,13 +8,12 @@ public interface NotesDao {
 
 	void saveNote(Note note);
 
-	void deleteNote(int userId);
+	void deleteNote(int noteId);
 
 	void updateNote(Note note);
 
 	Note getNoteByNoteId(int userId);
 
 	List<Note> getNotesByUserId(int userId);
-	
 	
 }

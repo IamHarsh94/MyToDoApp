@@ -11,11 +11,11 @@ public interface NoteService {
 
 	NoteResponseDto saveNote(CreateNoteDto newNoteDto, int userId);
 
-	void deleteNote(int userId, int noteId);
-
 	NoteResponseDto updateNote(UpdateNoteDto updateDTO, int userId);
 
 	List<NoteResponseDto> getNotes(int tokenId);
+
+	void delete(int tokenId, int noteId);
 	
 	
 	
