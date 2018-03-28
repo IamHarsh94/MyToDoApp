@@ -1,7 +1,6 @@
 package com.bridgelabz.todo.notes.model;
 
-import java.util.Date;
-import java.sql.Timestamp;    
+import java.util.Date;    
 import com.bridgelabz.todo.user.model.User;
 
 public class Note {

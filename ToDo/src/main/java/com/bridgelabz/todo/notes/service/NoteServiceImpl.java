@@ -37,10 +37,12 @@ public class NoteServiceImpl implements NoteService {
 		User user = new User();
 		user.setId(userId);
 		note.setUser(user);
+		
 		Date dt = new Date();
 		note.setReminder(dt);
-		noteDao.saveNote(note);
 		
+		noteDao.saveNote(note);
+		note.setReminder(null);
 		return new NoteResponseDto(note);
 	}
 	
@@ -69,10 +71,12 @@ public class NoteServiceImpl implements NoteService {
 		Date updatedAt = new Date();
 		note.setLastUpdateDate(updatedAt);
 		note.setUser(user);
-		System.out.println("Note Date :"+note.getReminder());
-		noteDao.updateNote(note);
 		
+		note.setReminder(updateDTO.getReminder());
+		noteDao.updateNote(note);
+	
 		return new NoteResponseDto(note);
+		
 	}
 
 	@Override
