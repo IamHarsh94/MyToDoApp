@@ -38,8 +38,8 @@ public class NoteServiceImpl implements NoteService {
 		user.setId(userId);
 		note.setUser(user);
 		
-		Date dt = new Date();
-		note.setReminder(dt);
+		/*Date dt = new Date();
+		note.setReminder(dt);*/
 		
 		noteDao.saveNote(note);
 		note.setReminder(null);

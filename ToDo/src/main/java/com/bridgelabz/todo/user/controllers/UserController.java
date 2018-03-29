@@ -57,7 +57,9 @@ public class UserController {
 		}
 		try {
 			String url = req.getRequestURL().toString();
+			
 			String requestUrl = url.substring(0,url.lastIndexOf("/"))+"/registerConfirmation/";
+			
 			if(userService.userRegistration(DTOuser,requestUrl)) {
 				response.setMessage("user register success");
 				response.setStatusCode(200);

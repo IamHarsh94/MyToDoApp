@@ -28,6 +28,7 @@ public class UserServiceImpl implements UserService{
 		User user = new User(DTOuser.getFullName(), DTOuser.getUserEmail(), DTOuser.getPassWord(), DTOuser.getConfirmpassword(), DTOuser.getMobileNum(),
 				DTOuser.getAddress());
 		User user1=userDao.getUserByEmailId(user.getUserEmail());
+		
 		if(user1 == null) {
 			String hashCode=passwordEncoder.encode(user.getPassWord());
 			user.setPassWord(hashCode);

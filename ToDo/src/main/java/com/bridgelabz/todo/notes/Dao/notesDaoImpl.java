@@ -41,7 +41,7 @@ public class notesDaoImpl implements NotesDao{
 				ps.setInt(6, note.getUser().getId());
 				ps.setString(7,note.getColor());
 				ps.setInt(8, note.getStatus());
-				ps.setDate(9, new Date(note.getReminder().getTime()));
+				ps.setDate(9, null);
 				return ps;
 			}
 		}, holder);
