@@ -102,4 +102,5 @@ public class UserServiceImpl implements UserService{
 	public User fetchUserByUserId(int userId) {
 		return userDao.getUserById(userId);
 	}
+	
 }

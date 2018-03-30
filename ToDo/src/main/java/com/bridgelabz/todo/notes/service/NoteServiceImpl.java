@@ -1,6 +1,5 @@
 package com.bridgelabz.todo.notes.service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,10 +36,7 @@ public class NoteServiceImpl implements NoteService {
 		User user = new User();
 		user.setId(userId);
 		note.setUser(user);
-		
-		/*Date dt = new Date();
-		note.setReminder(dt);*/
-		
+	
 		noteDao.saveNote(note);
 		note.setReminder(null);
 		return new NoteResponseDto(note);
@@ -61,8 +57,6 @@ public class NoteServiceImpl implements NoteService {
 	@Override
 	public NoteResponseDto updateNote(UpdateNoteDto updateDTO, int tokenId) {
 		User user = userDao.getUserById(tokenId);
-		
-		System.out.println("req :"+updateDTO.getReminder());
 		
 		Note note =new Note(updateDTO);
 		note.setTitle(updateDTO.getTitle());

@@ -20,7 +20,14 @@
 				<mvc:mapping path="/note/**"/>
 				<bean class="com.bridgelabz.todo.interceptor.NotesInterceptor" />
 			</mvc:interceptor>
+			
+			<mvc:interceptor>
+				<mvc:mapping path="/user/**"/>
+				<bean class="com.bridgelabz.todo.interceptor.UserInterceptor" />
+			</mvc:interceptor>
+			
 		</mvc:interceptors>	
+			
 			
 			
 	<bean id="userDao" class="com.bridgelabz.todo.user.Dao.UserDaoImpl" />
