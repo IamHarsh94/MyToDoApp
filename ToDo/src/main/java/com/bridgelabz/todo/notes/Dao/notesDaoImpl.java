@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import com.bridgelabz.todo.notes.Exception.DatabaseException;
+import com.bridgelabz.todo.notes.model.Label;
 import com.bridgelabz.todo.notes.model.Note;
 import com.bridgelabz.todo.user.model.User;
 
@@ -92,6 +93,24 @@ public class notesDaoImpl implements NotesDao{
 		List<Note> list = jdbcTemplate.query(sql, new Object[] {userId}, new MyMapperClass());
 		return list;
 	}
+
+	@Override
+	public void saveLabel(Label labelObj) {
+		String sql = "insert into LABEL values(?,?,?)";
+		int num = jdbcTemplate.update(sql, new Object[] {labelObj.getLabelId(),labelObj.getLabelTitle(),labelObj.getUser().getId()});
+		 if(num==0) {
+			throw new DatabaseException();
+		 }
+		
+	}
+
+	@Override
+	public List<Label>getLabelsByUserId(int userId) {
+		String sql = "select * from LABEL where userId=?";
+		List<Label> list = jdbcTemplate.query(sql, new Object[] {userId}, new MyLabelMapperClass());
+		return list;
+
+	}
 	
 }
 class MyMapperClass implements org.springframework.jdbc.core.RowMapper<Note> {
@@ -118,6 +137,20 @@ class MyMapperClass implements org.springframework.jdbc.core.RowMapper<Note> {
 		user.setId(userId);
 		note.setUser(user);
 		return note;
+	}
+
+}
+class MyLabelMapperClass implements org.springframework.jdbc.core.RowMapper<Label> {
+	public Label mapRow(ResultSet rs, int rowNum) throws SQLException {
+		Label label = new Label();			
+		label.setLabelId(rs.getInt("labelId"));
+		label.setLabelTitle(rs.getString("labelTitle"));
+		
+		int userId = rs.getInt("userId");
+		User user = new User();
+		user.setId(userId);
+		label.setUser(user);
+		return label;
 	}
 
 }

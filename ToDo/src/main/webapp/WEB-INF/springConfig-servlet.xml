@@ -16,6 +16,7 @@
 	<mvc:annotation-driven />
 			
 		<mvc:interceptors>
+			
 			<mvc:interceptor>
 				<mvc:mapping path="/note/**"/>
 				<bean class="com.bridgelabz.todo.interceptor.NotesInterceptor" />
@@ -90,7 +91,7 @@
 		<property name="emailAddress" value="${emailAddress:#{null}}" />
 	</bean>
 	
-	<bean id="token" class="com.bridgelabz.todo.user.util.Token"/>
+	<bean id="token" class="com.bridgelabz.todo.user.util.TokenUtil"/>
 	
 	<!-- import different variables according to active profile -->
 

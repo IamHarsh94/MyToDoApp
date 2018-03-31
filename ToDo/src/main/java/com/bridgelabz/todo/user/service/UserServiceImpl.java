@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.bridgelabz.todo.user.Dao.userDao;
 import com.bridgelabz.todo.user.model.DTO;
 import com.bridgelabz.todo.user.model.User;
-import com.bridgelabz.todo.user.util.Token;
+import com.bridgelabz.todo.user.util.TokenUtil;
 import com.bridgelabz.todo.user.validation.UserValidation;
 
 @Service
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService{
 	@Autowired
 	private MailService userMail;
 	@Autowired
-	private Token userToken;
+	private TokenUtil userToken;
 	@Transactional(rollbackFor = Exception.class)
 	public boolean userRegistration(DTO DTOuser,String url) throws Exception {
 		User user = new User(DTOuser.getFullName(), DTOuser.getUserEmail(), DTOuser.getPassWord(), DTOuser.getConfirmpassword(), DTOuser.getMobileNum(),
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService{
 					String subject = "Link to reset password";
 					String message =URL;
 					if(userMail.sendMail(to, subject, message)){
-						return true;			
+						return true;	
 					}
 				}
 				return false;	

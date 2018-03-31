@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.bridgelabz.todo.notes.Dao.NotesDao;
 import com.bridgelabz.todo.notes.Exception.UnAuthorizedAcess;
 import com.bridgelabz.todo.notes.model.CreateNoteDto;
+import com.bridgelabz.todo.notes.model.Label;
 import com.bridgelabz.todo.notes.model.Note;
 import com.bridgelabz.todo.notes.model.NoteResponseDto;
 import com.bridgelabz.todo.notes.model.UpdateNoteDto;
@@ -86,6 +87,22 @@ public class NoteServiceImpl implements NoteService {
 			notes.add(dto);
 		}
 		return notes;
+	}
+
+	@Override
+	public void saveLabel(Label labelObj, int userId) {
+		
+		User user = new User();
+		user.setId(userId);
+		labelObj.setUser(user);
+		noteDao.saveLabel(labelObj);
+		
+	}
+
+	@Override
+	public List<Label> getLabels(int userId) {
+		List<Label> list = noteDao.getLabelsByUserId(userId);
+		return list;
 	}
 
 }

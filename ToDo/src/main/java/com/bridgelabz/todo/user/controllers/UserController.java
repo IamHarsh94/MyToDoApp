@@ -25,20 +25,22 @@ import com.bridgelabz.todo.user.service.UserService;
 import com.bridgelabz.todo.user.validation.UserValidation;
 
 @RestController
-@RequestMapping("/user/")
 public class UserController {
 	private final org.apache.log4j.Logger LOGGER = LogManager.getLogger(UserController.class);
 	private static CustomResponse   response = new CustomResponse ();
 	private static RegisterErrors errorRes = new RegisterErrors();
+	
 	@Autowired 
 	private UserService userService;
+	
 	@Autowired 
 	private UserValidation validator;
 	
 	@RequestMapping(value="login",method =RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
-	
-	public ResponseEntity<?> loginUser(@RequestBody DTO DTOuser, HttpServletResponse res) {
+	public ResponseEntity<?> loginUser(@RequestBody DTO DTOuser, HttpServletResponse res) 
+	{
 		String token=userService.userLogin(DTOuser);
+		
 		if(token!=null) {
 			res.setHeader("Authorization",token);
 			response.setMessage("User successfully login");
@@ -49,63 +51,94 @@ public class UserController {
 		response.setStatusCode(400);
 		return new ResponseEntity<CustomResponse>(response,HttpStatus.OK);
 	}
+	
+	
 	@RequestMapping(value="register",method=RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> registrationUser( HttpServletRequest req,@RequestBody DTO DTOuser, BindingResult BindResult) {
+		
+		// Validating the form data
 		validator.validate(DTOuser, BindResult);
+		
 		List<FieldError> error=BindResult.getFieldErrors();
-		if(BindResult.hasErrors()) {
+		if( BindResult.hasErrors() ) 
+		{
 			response.setMessage("Enter field properly");
 			response.setStatusCode(400);
 			return new ResponseEntity<CustomResponse>(response, HttpStatus.CONFLICT);
 		}
-		try {
+		
+		try 
+		{
 			String url = req.getRequestURL().toString();
 			
 			String requestUrl = url.substring(0,url.lastIndexOf("/"))+"/registerConfirmation/";
 			
-			if(userService.userRegistration(DTOuser,requestUrl)) {
+			// registering user
+			boolean isvalid = userService.userRegistration(DTOuser,requestUrl);
+			if( isvalid ) 
+			{
+				LOGGER.info("User "+ DTOuser.getUserEmail() + " is registered successfully");
 				response.setMessage("user register success");
 				response.setStatusCode(200);
 				return new ResponseEntity<CustomResponse>(response, HttpStatus.OK);
-			}else {
+			}
+			else
+			{
 				errorRes.setMessage("Enter field properly");
 				errorRes.setErrors(error);
 				return new ResponseEntity<CustomResponse>(errorRes, HttpStatus.CONFLICT);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		}
+		catch (Exception e) 
+		{
+			LOGGER.error("Error while registering user", e);
 			return new ResponseEntity<String>("Server error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
 	@RequestMapping(value="sendEmail",method=RequestMethod.POST ,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> validateEmail(HttpServletRequest req , HttpServletResponse res , @RequestBody DTO DTOuser) {
+	public ResponseEntity<?> validateEmail(HttpServletRequest req , HttpServletResponse res , @RequestBody DTO DTOuser) 
+	{
 		String url = req.getRequestURL().toString();
-		String requestUrl = url.substring(0,url.lastIndexOf("/"))+"user/resetPassword";
-		if(userService.sendEmail(DTOuser.getUserEmail(), requestUrl)) {
+		String requestUrl = url.substring(0,url.lastIndexOf("/"))+"resetPassword";
+		
+		if(userService.sendEmail(DTOuser.getUserEmail(), requestUrl)) 
+		{
 			response.setMessage("Mail send successfully");
 			response.setStatusCode(200);
 			return  new ResponseEntity<CustomResponse>(response,HttpStatus.CREATED);
 		}
+		
 		response.setMessage("Mail not send");
 		response.setStatusCode(409);
 		return new ResponseEntity<CustomResponse>(response, HttpStatus.CONFLICT);
 	}
+	
 	@RequestMapping(value="resetPassword/{randomUUID}" , method = RequestMethod.POST) // take new password from user 
 	public ResponseEntity<?> resetPassword(@PathVariable("randomUUID")String userUUID,@RequestBody DTO DTOuser){
 		String email=userService.getEmailByUUID(userUUID);
 		//DTOuser.getPassWord(); validate this password ex: not less than 5 char
-		if(email!=null) {
+		if(email!=null) 
+		{
 			DTOuser.setUserEmail(email);
-			if(userService.resetPassword(DTOuser)) {
+			if(userService.resetPassword(DTOuser)) 
+			{
 				response.setMessage("password reset successfully");
 				response.setStatusCode(200);
 				return new ResponseEntity<CustomResponse>(response,HttpStatus.OK);
 			}
-		}	
+		}
+		
 		response.setMessage("password not reset try again");
 		response.setStatusCode(409);
 		return new ResponseEntity<CustomResponse>(response,HttpStatus.CONFLICT);
 	}
+	
+	
+	/** This method confirm the registration process. Validate the token sent in email. 
+	 * @param userUUID - Token sent in mail
+	 * @return - Response JSON
+	 */
 	@RequestMapping(value="registerConfirmation/{randomUUID}" , method = RequestMethod.POST)
 	public ResponseEntity<?> registerConfirmation(@PathVariable("randomUUID")String userUUID) {
 		if(userService.userActivation(userUUID)) {
@@ -118,7 +151,7 @@ public class UserController {
 		return new ResponseEntity<CustomResponse>(response,HttpStatus.CONFLICT); 
 	}
 	
-	@RequestMapping(value="getUser" , method = RequestMethod.GET)
+	@RequestMapping(value="user/getUser" , method = RequestMethod.GET)
 	public ResponseEntity<?> getLogedUser(@RequestAttribute(name="userId") int userId) {
 		User user =userService.fetchUserByUserId(userId); 
 			if(user!=null) {

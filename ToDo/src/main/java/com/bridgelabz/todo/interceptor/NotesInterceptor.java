@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.bridgelabz.todo.user.service.UserService;
-import com.bridgelabz.todo.user.util.Token;
+import com.bridgelabz.todo.user.util.TokenUtil;
 
 @Component
 public class NotesInterceptor extends HandlerInterceptorAdapter {
@@ -23,7 +23,7 @@ public class NotesInterceptor extends HandlerInterceptorAdapter {
 		
 		if (!req.getMethod().equals(OPTIONS)) {
 			try {
-				int userId = Token.verifyToken(req.getHeader("Authorization"));
+				int userId = TokenUtil.verifyToken(req.getHeader("Authorization"));
 				 if(userService.fetchUserByUserId(userId)!=null) {
 					 System.out.println("in interceptor");
 					 req.setAttribute("userId",userId);

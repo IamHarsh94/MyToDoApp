@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.todo.notes.model.CreateNoteDto;
+import com.bridgelabz.todo.notes.model.Label;
 import com.bridgelabz.todo.notes.model.NoteResponseDto;
 import com.bridgelabz.todo.notes.model.UpdateNoteDto;
 import com.bridgelabz.todo.notes.service.NoteService;
-import com.bridgelabz.todo.user.util.Token;
 
 @RestController
 @RequestMapping("/note/")
@@ -54,5 +54,19 @@ public class NotesController {
 		List<NoteResponseDto>notes=noteService.getNotes(userId);
 		return new ResponseEntity<List>(notes,HttpStatus.OK);
 	}
+	
+	@RequestMapping(value="createLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> createLabel(@RequestBody  Label labelObj,@RequestAttribute(name="userId") int userId){
+		noteService.saveLabel(labelObj, userId);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
 
+	@RequestMapping(value="getLabels",method =RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getlabels(HttpServletRequest req,@RequestAttribute(name="userId") int userId) {
+		
+		List<Label>labels=noteService.getLabels(userId);
+		return new ResponseEntity<List>(labels,HttpStatus.OK);
+	}
+	
 }

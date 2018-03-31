@@ -9,7 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.bridgelabz.todo.user.service.UserService;
-import com.bridgelabz.todo.user.util.Token;
+import com.bridgelabz.todo.user.util.TokenUtil;
 
 @Component
 public class UserInterceptor  extends HandlerInterceptorAdapter{
@@ -17,12 +17,11 @@ public class UserInterceptor  extends HandlerInterceptorAdapter{
 	@Autowired 
 	private UserService userService;
 	
-	
 	@Override
 	public boolean preHandle(HttpServletRequest req,
 			HttpServletResponse response, Object handler) throws Exception {
 			try {
-				int userId = Token.verifyToken(req.getHeader("Authorization"));
+				int userId = TokenUtil.verifyToken(req.getHeader("authorization"));
 				 if(userService.fetchUserByUserId(userId)!=null) {
 					 System.out.println("in User interceptor");
 					 req.setAttribute("userId",userId);

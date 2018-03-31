@@ -7,7 +7,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-public class Token {
+public class TokenUtil {
 
 	private static String key = "QwErTyUiOp";
 
