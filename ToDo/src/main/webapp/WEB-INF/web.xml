@@ -9,7 +9,7 @@
   	<filter-name>CORSFilter</filter-name>
   	<display-name>CORSFilter</display-name>
   	<description></description>
-  	<filter-class>com.bridgelabz.todo.interceptor.CORSFilter</filter-class>
+  	<filter-class>com.fundoonotes.utilservice.CORSFilter</filter-class>
   </filter>
   <filter-mapping>
   	<filter-name>CORSFilter</filter-name>
