@@ -15,12 +15,29 @@ public class UserDaoImpl implements IuserDao
    @Autowired
    private JdbcTemplate jdbcTemplate;
 
+   /**
+    * This method used to save the user 
+    * 
+    * @return return true if user save successfully otherwise return false
+    * */   
    public boolean save(UserModel user)
    {
       String sql = "insert into USER values(?,?,?,?,?,?,?,?)";
-      int num = jdbcTemplate.update(sql, new Object[] { user.getId(), user.getFullName(), user.getUserEmail(),
-            user.getPassWord(), user.getMobileNum(), user.getAddress(), user.isActive(), user.getUUID() });
-      return num != 0;
+      
+      int num = jdbcTemplate.update(sql,
+            
+            new Object[] { 
+           
+              user.getId(), user.getFullName(), user.getUserEmail(),user.getPassWord(),
+              user.getMobileNum(), user.getAddress(), user.isActive(), user.getUUID() 
+            
+            });
+      
+      if(num==0)
+      {
+         throw new DatabaseException();
+      }
+      return true;
    }
 
    /**
@@ -63,8 +80,14 @@ public class UserDaoImpl implements IuserDao
    public boolean updateUUID(String email, String randomUUID)
    {
       String sql = "update USER set UUID=? where userEmail=?";
+      
       int num = jdbcTemplate.update(sql, new Object[] { randomUUID, email });
-      return num != 0;
+      
+      if (num == 0)
+      {
+         throw new DatabaseException();
+      }
+      return true;
    }
 
    @Override
@@ -83,21 +106,38 @@ public class UserDaoImpl implements IuserDao
       int num = jdbcTemplate.update(sql, new Object[] { passWord, email });
       return num != 0;
    }
-
+   
+   /**
+    * Fetching user by token
+    * @param user token
+    * 
+    * @retun return list if user present otherwise null
+    * */
    @Override
    public UserModel getUserByUUID(String userUUID)
    {
       String sql = "select * from USER where UUID=?";
+      
       List<UserModel> list = jdbcTemplate.query(sql, new Object[] { userUUID }, new MyMapper());
+      
       return list.size() > 0 ? list.get(0) : null;
    }
 
+   /**
+    *<p>
+    *  Simply update the status by user email id
+    *  If status not update then throw my custom exception 
+    * </p>   
+    * */
    @Override
    public void activateUser(UserModel user)
    {
       String sql = "update USER set isActive=? where userEmail=?";
+      
       int num = jdbcTemplate.update(sql, new Object[] { user.isActive(), user.getUserEmail() });
-      if (num == 0) {
+      
+      if (num == 0)
+      {
          throw new DatabaseException();
       }
    }

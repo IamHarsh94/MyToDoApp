@@ -26,8 +26,9 @@ public class notesDaoImpl implements NotesDao{
 	@Override
 	public void saveNote(NoteModel note) {
 		String INSERT_SQL = "insert into NOTES values(?,?,?,?,?,?,?,?,?)";	
+		
 		KeyHolder holder = new GeneratedKeyHolder();
-		jdbcTemplate.update(new PreparedStatementCreator() {
+		int num = jdbcTemplate.update(new PreparedStatementCreator() {
 
 			@Override
 			public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
@@ -44,6 +45,11 @@ public class notesDaoImpl implements NotesDao{
 				return ps;
 			}
 		}, holder);
+		
+		if(num==0) 
+		{
+		   throw new DatabaseException();
+		}
 		
 		int noteId = holder.getKey().intValue();
 		note.setId(noteId);
