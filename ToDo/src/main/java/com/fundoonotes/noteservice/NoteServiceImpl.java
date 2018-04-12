@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fundoonotes.exception.UnAuthorizedAcess;
 import com.fundoonotes.userservice.UserModel;
 import com.fundoonotes.userservice.IuserDao;
+import com.fundoonotes.userservice.UserController;
 
 @Service
 public class NoteServiceImpl implements NoteService {
 
-	@Autowired
+   private final org.apache.log4j.Logger LOGGER = LogManager.getLogger(UserController.class);
+	
+   @Autowired
 	private NotesDao noteDao;
 
 	@Autowired
@@ -42,11 +46,15 @@ public class NoteServiceImpl implements NoteService {
 		UserModel user = userDao.getUserById(tokenId);
 
 		NoteModel note = noteDao.getNoteByNoteId(noteId);
-		if (user.getId() != note.getUser().getId()) {
-			throw new UnAuthorizedAcess();
+		if(note!=null)
+		{
+		   if (user.getId() != note.getUser().getId())
+		   {
+	         throw new UnAuthorizedAcess();
+	      }
+		   noteDao.deleteNote(noteId);
 		}
-
-		noteDao.deleteNote(noteId);
+		 LOGGER.info("Notes not present in db of "+noteId+" note id");
 			
 	}
 	@Override
@@ -76,9 +84,15 @@ public class NoteServiceImpl implements NoteService {
 		List<NoteModel> list = noteDao.getNotesByUserId(userId);
 		
 		List<NoteResponseDto> notes = new ArrayList<>();
-		for (NoteModel note : list) {
+		
+		for (NoteModel note : list)
+		{
 			NoteResponseDto dto = new NoteResponseDto(note);
-			notes.add(dto);
+			
+			List<LabelResDTO> labels=noteDao.getLabelByNoteId(dto.getNoteId());
+			  
+			dto.setLabels(labels);
+		   notes.add(dto);
 		}
 		return notes;
 	}
@@ -98,5 +112,36 @@ public class NoteServiceImpl implements NoteService {
 		List<LabelDTO> list = noteDao.getLabelsByUserId(userId);
 		return list;
 	}
+
+   @Override
+   public void addLabel(AddRemoveLabelDTO reqDTO, int userId)
+   {  
+      NoteModel note=noteDao.getNoteByNoteId(reqDTO.getNoteId());
+      
+      if(note!=null)
+      {
+         if(userId!=note.getUser().getId())
+         {
+            throw new UnAuthorizedAcess();
+         }
+         noteDao.addLabelToNote(reqDTO);
+      }
+      
+   }
+
+   @Override
+   public void removeLabel(AddRemoveLabelDTO reqDTO, int userId)
+   {
+      NoteModel note=noteDao.getNoteByNoteId(reqDTO.getNoteId());
+      
+      if(note!=null)
+      {
+         if(userId!=note.getUser().getId())
+         {
+            throw new UnAuthorizedAcess();
+         }
+         noteDao.removeLabelFromNote(reqDTO);
+      }
+   }
 
 }

@@ -83,12 +83,12 @@ public class notesDaoImpl implements NotesDao{
 		String sql = "select * from NOTES where id=?";
 		List<NoteModel> list = jdbcTemplate.query(sql, new Object[] {noteId}, new MyMapperClass());
 		
-		if(list.size()<=0) {
-			System.out.println("in database row not update");
+		if(list.size()==0) {
+			
 			throw new DatabaseException();
 		}
-		System.out.println("in db row update");
-		return list.get(0);
+	
+		return list.size() > 0 ? list.get(0) : null;
 	}
 	
 	@Override
@@ -115,6 +115,41 @@ public class notesDaoImpl implements NotesDao{
 		return list;
 
 	}
+
+   @Override
+   public List<LabelResDTO> getLabelByNoteId(int noteId)
+   {
+      String sql = "SELECT LABEL.labelTitle,Note_Label.labelId\n" + 
+            "FROM LABEL \n" + 
+            "INNER JOIN Note_Label \n" + 
+            "ON Note_Label.labelId=LABEL.labelId \n" + 
+            "where Note_Label.noteId=?;";
+      
+      List<LabelResDTO> list = jdbcTemplate.query(sql, new Object[] {noteId}, new GetLabelMapperClass());
+      return list.size() > 0 ? list : null;
+
+      
+   }
+
+   @Override
+   public void addLabelToNote(AddRemoveLabelDTO reqDTO)
+   {
+      String sql = "insert into Note_Label values(?,?)";
+      int num = jdbcTemplate.update(sql, new Object[] {reqDTO.getNoteId(),reqDTO.getLabelId()});
+      if(num==0) {
+        throw new DatabaseException();
+      }
+   }
+
+   @Override
+   public void removeLabelFromNote(AddRemoveLabelDTO reqDTO)
+   {
+      int num=jdbcTemplate.update("DELETE FROM Note_Label WHERE noteId=? and labelId=?", new Object[] { reqDTO.getNoteId(),reqDTO.getLabelId() });
+      if(num==0) {
+         throw new DatabaseException();
+      }
+      
+   }
 	
 }
 class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel> {
@@ -145,15 +180,25 @@ class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel
 
 }
 class MyLabelMapperClass implements org.springframework.jdbc.core.RowMapper<LabelDTO> {
-	public LabelDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-		LabelDTO label = new LabelDTO();			
-		label.setLabelId(rs.getInt("labelId"));
-		label.setLabelTitle(rs.getString("labelTitle"));
-		
-		int userId = rs.getInt("userId");
-		UserModel user = new UserModel();
-		user.setId(userId);
-		label.setUser(user);
+   public LabelDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+      LabelDTO label = new LabelDTO();       
+      label.setLabelId(rs.getInt("labelId"));
+      label.setLabelTitle(rs.getString("labelTitle"));
+      
+      int userId = rs.getInt("userId");
+      UserModel user = new UserModel();
+      user.setId(userId);
+      label.setUser(user);
+      return label;
+   }
+
+}
+
+class GetLabelMapperClass implements org.springframework.jdbc.core.RowMapper<LabelResDTO> {
+	public LabelResDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+	   LabelResDTO label = new LabelResDTO();			
+		 label.setLabelId(rs.getInt("labelId"));
+		 label.setLabelTitle(rs.getString("labelTitle"));
 		return label;
 	}
 

@@ -46,7 +46,7 @@ public class NotesController
 	@RequestMapping(value="createNote",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> createNote(@RequestBody CreateNoteDto newNoteDto,@RequestAttribute(name="userId") int userId)
 	{
-	   // simply Save the note 
+	  
 		NoteResponseDto noteResObj= noteService.saveNote(newNoteDto, userId);
 		return new ResponseEntity<NoteResponseDto>(noteResObj,HttpStatus.OK);
 		
@@ -73,7 +73,7 @@ public class NotesController
 	{
 		
 		List<NoteResponseDto>notes=noteService.getNotes(userId);
-		return new ResponseEntity<List>(notes,HttpStatus.OK);
+		return new ResponseEntity<List<NoteResponseDto>>(notes,HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="createLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
@@ -92,4 +92,26 @@ public class NotesController
 		return new ResponseEntity<List>(labels,HttpStatus.OK);
 	}
 	
+
+   @RequestMapping(value="addRemoveLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> addRemoveLabel(@RequestBody  AddRemoveLabelDTO reqDTO,@RequestAttribute(name="userId") int userId)
+   {
+      if(reqDTO.isChecked())
+      {
+         noteService.addLabel(reqDTO,userId);   
+         return new ResponseEntity<>(HttpStatus.OK);
+         
+      }
+      else if(!reqDTO.isChecked())
+      {
+         noteService.removeLabel(reqDTO,userId);
+         return new ResponseEntity<>(HttpStatus.OK);
+         
+      }
+      else
+      {
+         return new ResponseEntity<>(HttpStatus.CONFLICT);
+      }       
+   }
+   
 }

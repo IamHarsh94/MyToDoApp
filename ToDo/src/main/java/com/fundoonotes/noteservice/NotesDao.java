@@ -17,5 +17,11 @@ public interface NotesDao {
 	void saveLabel(LabelDTO labelObj);
 
 	List<LabelDTO> getLabelsByUserId(int userId);
+
+   List<LabelResDTO> getLabelByNoteId(int noteId);
+
+   void addLabelToNote(AddRemoveLabelDTO reqDTO);
+
+   void removeLabelFromNote(AddRemoveLabelDTO reqDTO);
 	
 }

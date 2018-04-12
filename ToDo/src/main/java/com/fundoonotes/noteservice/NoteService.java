@@ -16,6 +16,10 @@ public interface NoteService {
 	void saveLabel(LabelDTO labelObj, int userId);
 
 	List<LabelDTO> getLabels(int userId);
+
+   void addLabel(AddRemoveLabelDTO reqDTO, int userId);
+
+   void removeLabel(AddRemoveLabelDTO reqDTO, int userId);
 	
 	
 	

@@ -20,7 +20,7 @@ public class UserInterceptor  extends HandlerInterceptorAdapter{
 	public boolean preHandle(HttpServletRequest req,
 			HttpServletResponse response, Object handler) throws Exception {
 			try {
-				int userId = TokenUtil.verifyToken(req.getHeader("authorization"));
+				int userId = TokenUtil.verifyToken(req.getHeader("Authorization"));
 				 if(userService.fetchUserByUserId(userId)!=null) {
 					 System.out.println("in User interceptor");
 					 req.setAttribute("userId",userId);
@@ -44,8 +44,6 @@ public class UserInterceptor  extends HandlerInterceptorAdapter{
 	public void afterCompletion(HttpServletRequest request,
 			HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-			//System.out.println("afterCompletion :: Request inside afterCompletion");
- 
 	}
 	
 }

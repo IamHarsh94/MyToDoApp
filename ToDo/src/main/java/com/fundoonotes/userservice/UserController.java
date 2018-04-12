@@ -60,60 +60,37 @@ public class UserController
    public ResponseEntity<?> registrationUser(HttpServletRequest req, @RequestBody UserDTO DTOuser,
          BindingResult BindResult)
    {
-      
-      // @param  BindResult (General interface that represents binding results.
-      //         Extends the interface for error registration capabilities)
-      
-      // @param  DTOuser object having fields
-      // @return   void
-       validator.validate(DTOuser, BindResult);
+      validator.validate(DTOuser, BindResult);
 
-      
-       // If any result is binded then return Custom response to the user 
-      if (BindResult.hasErrors())
-      {
+      if (BindResult.hasErrors()) {
          LOGGER.error("User Registration validation error");
          response.setMessage("Enter field properly");
          response.setStatusCode(400);
-        
+
          return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CONFLICT);
       }
       try {
-         
-         //Get current API URL form request Object 
+
          String url = req.getRequestURL().toString();
 
-         
-          //  Creating the registerConfirmation link with Concatenating current
-           // API URL
-          
          String requestUrl = url.substring(0, url.lastIndexOf("/")) + "/registerConfirmation/";
 
-         
-          // @param DTOuser having user fields
-          // @param requestUrl (registerConfirmation link) which we will send to
-          //           the user
-          // @return return true if successfully register otherwise return false
-          boolean isRegister = userService.userRegistration(DTOuser, requestUrl);
+         boolean isRegister = userService.userRegistration(DTOuser, requestUrl);
 
-         if (isRegister)
-         {
+         if (isRegister) {
             LOGGER.info("User " + DTOuser.getUserEmail() + " is registered successfully");
             response.setMessage("user register success");
             response.setStatusCode(200);
-            
+
             return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
-         } 
-         else
-         {
+         } else {
             LOGGER.info("User registration failed..");
             response.setMessage("registration failed..");
             response.setStatusCode(400);
-           
+
             return new ResponseEntity<CustomResponseDTO>(errorRes, HttpStatus.CONFLICT);
          }
-      } catch (Exception e)
-      {
+      } catch (Exception e) {
          LOGGER.error("Error while registering user", e);
          return new ResponseEntity<String>("Server error", HttpStatus.INTERNAL_SERVER_ERROR);
       }
@@ -132,23 +109,18 @@ public class UserController
    @RequestMapping(value = "registerConfirmation/{randomUUID}", method = RequestMethod.POST)
    public ResponseEntity<?> registerConfirmation(@PathVariable("randomUUID") String userUUID)
    {
-      
-       // @param userUUID (Getting from path as a path variable)
-       // @return return true if successfully activate otherwise return false
-       
       boolean isActivate = userService.userActivation(userUUID);
 
-      if (isActivate)
-      {
+      if (isActivate) {
          response.setMessage("user activation success");
          response.setStatusCode(200);
-         
+
          return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
       }
 
       response.setMessage("user activation fail");
       response.setStatusCode(409);
-      
+
       return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CONFLICT);
    }
 
@@ -166,25 +138,21 @@ public class UserController
    @RequestMapping(value = "login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> loginUser(@RequestBody UserDTO DTOuser, HttpServletResponse res)
    {
-      
-      // @param DTOuser having user fields
-      // @return return JWT token if successfully login otherwise return null
       String token = userService.userLogin(DTOuser);
 
-      if (token != null)
-      {
+      if (token != null) {
          res.setHeader("Authorization", token);
-         
+
          response.setMessage("User successfully login");
          response.setStatusCode(200);
-         
+
          return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
       }
-      
+
       response.setMessage("User login failed");
       response.setStatusCode(400);
-      
-      return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
+
+      return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CONFLICT);
    }
 
    /**
@@ -200,34 +168,22 @@ public class UserController
    @RequestMapping(value = "sendEmail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> validateEmail(HttpServletRequest req, HttpServletResponse res, @RequestBody UserDTO DTOuser)
    {
-      
-      // Get current API URL form request Object
-       
+
       String url = req.getRequestURL().toString();
+      String requestUrl = url.substring(0, url.lastIndexOf("/")) + "/resetPassword/";
 
-      
-      // Creating the resetPassword link with Concatenating current API URL
-       
-        String requestUrl = url.substring(0, url.lastIndexOf("/")) + "/resetPassword/";
-
-      
-       // @param DTOuser object having user email id
-       // @param requestUrl (resetPassword link) which we will send to the user
-       // @return return true if successfully sent otherwise return false
-       
       boolean isSent = userService.sendEmail(DTOuser.getUserEmail(), requestUrl);
 
-      if (isSent)
-      {
+      if (isSent) {
          response.setMessage("Mail send successfully");
          response.setStatusCode(200);
-         
+
          return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CREATED);
       }
 
       response.setMessage("Mail not send");
       response.setStatusCode(409);
-    
+
       return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CONFLICT);
    }
 
@@ -246,40 +202,26 @@ public class UserController
    @RequestMapping(value = "resetPassword/{randomUUID}", method = RequestMethod.POST)
    public ResponseEntity<?> resetPassword(@PathVariable("randomUUID") String userUUID, @RequestBody UserDTO DTOuser)
    {
-      
-       // Fetching the user email by token id(UUID)
-        
-       // @return return user email id if present otherwise return null
-       
+
       String email = userService.getEmailByUUID(userUUID);
 
-      if (email != null)
-      {
-         
-          // Setting the user email in DTOuser object which we fetch from db
-          
+      if (email != null) {
+
          DTOuser.setUserEmail(email);
 
-         
-          // @param DTOuser object having user email id and new password
-          
-          // @return return true if successfully reset the password otherwise return false
-          
-          
          boolean isReset = userService.resetPassword(DTOuser);
 
-         if (isReset)
-         {
+         if (isReset) {
             response.setMessage("password reset successfully");
             response.setStatusCode(200);
-            
+
             return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
          }
       }
 
       response.setMessage("password not reset try again");
       response.setStatusCode(409);
-     
+
       return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CONFLICT);
    }
 
@@ -295,21 +237,16 @@ public class UserController
    @RequestMapping(value = "user/getUser", method = RequestMethod.GET)
    public ResponseEntity<?> getLogedUser(@RequestAttribute(name = "userId") int userId)
    {
-      
-       // Fetching the user from db with help of user id
-       // @param user id (request attribute)
+
       UserModel user = userService.fetchUserByUserId(userId);
 
-     
-      // If user not null then we simply return the user
-      if (user != null)
-      {
+      if (user != null) {
          return new ResponseEntity<UserModel>(user, HttpStatus.OK);
       }
 
       response.setMessage("user not return");
       response.setStatusCode(409);
-      
+
       return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CONFLICT);
    }
 

@@ -14,76 +14,76 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MailHelperService 
+public class MailHelperService
 {
-	private JavaMailSender mailSender;
-	
-	public MailHelperService() {}
+   private JavaMailSender mailSender;
 
-	public void setMailSender(JavaMailSender mailSender) 
-	{
-		this.mailSender = mailSender;
-	}
-	
-	public void send(String subject, String msg, String [] toAddress) throws MessagingException
-	{
-		send(subject, msg, toAddress, null, null);
-	}
-	public void send(String subject, String msg, String toAddress) throws MessagingException
-	{
-		send(subject, msg, toAddress, null);
-	}
-	public void send(String subject, String msg, String toAddress, String ccAddress) throws MessagingException
-	{
-		send(subject, msg, new String [] {toAddress}, new String [] {ccAddress}, null);
-	}
-	
-	public void send(String subject, String msg, String [] toAddress, String [] ccAddress, String [] fromAddress) throws MessagingException
-	{
-		MimeMessage message = mailSender.createMimeMessage();
-		
-		
-		MimeMessageHelper helper = new MimeMessageHelper(message, true);
-		
-		InternetAddress [] addresses = getAddresses(toAddress);
-		
-		if( addresses.length == 0 )
-		{
-			return;
-		}
-		helper.setTo(addresses);
-		addresses = getAddresses(ccAddress);
-		
-		if( addresses.length > 0 )
-		{
-			helper.setCc(addresses);
-		}
-		
-		addresses = getAddresses(fromAddress);
-		
-		if( addresses.length > 0 )
-		{
-			helper.setFrom(addresses[0]);;
-		}
-		
-		helper.setSubject(subject);
-		helper.setText(msg, true);// for html content boolean value should be true
-		
-		mailSender.send(message);
-	}
+   public MailHelperService()
+   {
+   }
 
-	private InternetAddress[] getAddresses(String[] addresses) throws AddressException 
-	{
-		List<Address> laddress = new ArrayList<>();
-		
-		if(addresses != null) 
-		{
-			for (String address : addresses) 
-			{
-				if(address != null && !address.trim().isEmpty())
-					laddress.add(new InternetAddress(address));
-			}
-		}
-		return laddress.toArray(new InternetAddress [] {});
-	}	
+   public void setMailSender(JavaMailSender mailSender)
+   {
+      this.mailSender = mailSender;
+   }
+
+   public void send(String subject, String msg, String[] toAddress) throws MessagingException
+   {
+      send(subject, msg, toAddress, null, null);
+   }
+
+   public void send(String subject, String msg, String toAddress) throws MessagingException
+   {
+      send(subject, msg, toAddress, null);
+   }
+
+   public void send(String subject, String msg, String toAddress, String ccAddress) throws MessagingException
+   {
+      send(subject, msg, new String[] { toAddress }, new String[] { ccAddress }, null);
+   }
+
+   public void send(String subject, String msg, String[] toAddress, String[] ccAddress, String[] fromAddress)
+         throws MessagingException
+   {
+      MimeMessage message = mailSender.createMimeMessage();
+
+      MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+      InternetAddress[] addresses = getAddresses(toAddress);
+
+      if (addresses.length == 0) {
+         return;
+      }
+      helper.setTo(addresses);
+      addresses = getAddresses(ccAddress);
+
+      if (addresses.length > 0) {
+         helper.setCc(addresses);
+      }
+
+      addresses = getAddresses(fromAddress);
+
+      if (addresses.length > 0) {
+         helper.setFrom(addresses[0]);
+         ;
+      }
+
+      helper.setSubject(subject);
+      helper.setText(msg, true);
+
+      mailSender.send(message);
+   }
+
+   private InternetAddress[] getAddresses(String[] addresses) throws AddressException
+   {
+      List<Address> laddress = new ArrayList<>();
+
+      if (addresses != null) {
+         for (String address : addresses) {
+            if (address != null && !address.trim().isEmpty())
+               laddress.add(new InternetAddress(address));
+         }
+      }
+      return laddress.toArray(new InternetAddress[] {});
+   }
 }

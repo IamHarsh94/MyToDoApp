@@ -1,6 +1,7 @@
 package com.fundoonotes.noteservice;
 
 import java.util.Date;
+import java.util.List;
 
 public class NoteResponseDto {
 
@@ -20,6 +21,8 @@ public class NoteResponseDto {
 	
 	private Date reminder;
 	
+	private List<LabelResDTO> labelList;
+	
 	public NoteResponseDto() {
 
 	}
@@ -35,9 +38,18 @@ public class NoteResponseDto {
 		this.reminder =note.getReminder();
 	}
 
-	
 
-	public Date getReminder() {
+   public List<LabelResDTO> getLabels()
+   {
+      return labelList;
+   }
+
+   public void setLabels(List<LabelResDTO> labels)
+   {
+      this.labelList = labels;
+   }
+
+   public Date getReminder() {
 		return reminder;
 	}
 

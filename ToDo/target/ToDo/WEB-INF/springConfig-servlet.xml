@@ -11,27 +11,35 @@
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
         ">
 	<!-- bean definitions here -->
-	<context:component-scan base-package="com.bridgelabz.todo"/>
+	<context:component-scan base-package="com.fundoonotes"/>
 	<tx:annotation-driven transaction-manager="transactionManager"/>	
 	<mvc:annotation-driven />
 			
 		<mvc:interceptors>
+			
 			<mvc:interceptor>
 				<mvc:mapping path="/note/**"/>
-				<bean class="com.bridgelabz.todo.interceptor.NotesInterceptor" />
+				<bean class="com.fundoonotes.utilservice.NotesInterceptor" />
 			</mvc:interceptor>
+			
+			<mvc:interceptor>
+				<mvc:mapping path="/user/**"/>
+				<bean class="com.fundoonotes.utilservice.UserInterceptor" />
+			</mvc:interceptor>
+			
 		</mvc:interceptors>	
 			
 			
-	<bean id="userDao" class="com.bridgelabz.todo.user.Dao.UserDaoImpl" />
-	<bean id="userService" class="com.bridgelabz.todo.user.service.UserServiceImpl" />
-	<bean id="noteService" class="com.bridgelabz.todo.notes.service.NoteServiceImpl" />
-	<bean id="noteDao" class="com.bridgelabz.todo.notes.Dao.notesDaoImpl" />
+			
+	<bean id="userDao" class="com.fundoonotes.userservice.UserDaoImpl" />
+	<bean id="userService" class="com.fundoonotes.userservice.UserServiceImpl" />
+	<bean id="noteService" class="com.fundoonotes.noteservice.NoteServiceImpl" />
+	<bean id="noteDao" class="com.fundoonotes.noteservice.notesDaoImpl" />
 	
 	
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="prefix" value="/WEB-INF/jsp/"/>
 		<property name="suffix" value=".jsp" />
 	</bean>
 
@@ -52,7 +60,7 @@
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
-	<bean id="userValidation" class="com.bridgelabz.todo.user.validation.UserValidation" />
+	<bean id="userValidation" class="com.fundoonotes.utilservice.UserValidation" />
 	<bean id="encoder"
 		class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
 	
@@ -73,17 +81,17 @@
 		</property>
 	</bean>
 
-	<bean id="userMail" class="com.bridgelabz.todo.user.service.MailService">
+	<bean id="userMail" class="com.fundoonotes.utilservice.MailService">
 		<property name="mailSender" ref="mailSender" />
 	</bean>
 
-	<bean id="emailService" class="com.bridgelabz.todo.user.email.EmailProperties">
+	<bean id="emailService" class="com.fundoonotes.utilservice.EmailProperties">
 		<property name="email" value="${userId}" />
 		<property name="password" value="${password}" />
 		<property name="emailAddress" value="${emailAddress:#{null}}" />
 	</bean>
 	
-	<bean id="token" class="com.bridgelabz.todo.user.util.Token"/>
+	<bean id="token" class="com.fundoonotes.utilservice.TokenUtil"/>
 	
 	<!-- import different variables according to active profile -->
 
