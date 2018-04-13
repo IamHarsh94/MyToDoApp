@@ -78,7 +78,7 @@ public class NoteServiceImpl implements NoteService {
 
 	@Override
 	public List<NoteResponseDto> getNotes(int userId) {
-		UserModel user = new UserModel();
+	   UserModel user = new UserModel();
 		user.setId(userId);
 		
 		List<NoteModel> list = noteDao.getNotesByUserId(userId);

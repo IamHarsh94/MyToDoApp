@@ -22,7 +22,6 @@ public class UserInterceptor  extends HandlerInterceptorAdapter{
 			try {
 				int userId = TokenUtil.verifyToken(req.getHeader("Authorization"));
 				 if(userService.fetchUserByUserId(userId)!=null) {
-					 System.out.println("in User interceptor");
 					 req.setAttribute("userId",userId);
 				 }
 			} catch (Exception e) {

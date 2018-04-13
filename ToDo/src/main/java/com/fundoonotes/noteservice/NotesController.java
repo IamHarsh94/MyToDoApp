@@ -114,4 +114,13 @@ public class NotesController
       }       
    }
    
+   @RequestMapping(value="addcollaborator",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> addcollaborator(@RequestBody CollaboratorReqDTO personReqDTO, @RequestAttribute(name="userId") int userId)
+   {
+      return null;
+//      noteService.saveLabel(labelObj, userId);
+//      return new ResponseEntity<>(HttpStatus.OK);
+   }
+   
+   
 }

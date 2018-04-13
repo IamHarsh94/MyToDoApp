@@ -30,7 +30,7 @@ public class NotesInterceptor extends HandlerInterceptorAdapter
            
             if (userService.fetchUserByUserId(userId) != null)
             {
-               System.out.println("in note interceptor");
+            
               
                req.setAttribute("userId", userId);
             }
