@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import com.fundoonotes.exception.DatabaseException;
+import com.fundoonotes.userservice.UserDTO;
 import com.fundoonotes.userservice.UserModel;
 
 
@@ -150,7 +151,42 @@ public class notesDaoImpl implements NotesDao{
       }
       
    }
+
+   @Override
+   public void addcollaborator(int id,CollaboratorReqDTO personReqDTO)
+   {
+      String sql = "insert into Collaborators values(?,?,?)";
+      int num = jdbcTemplate.update(sql, new Object[] {personReqDTO.getId(),personReqDTO.getNoteId(),id});
+       if(num==0) {
+         throw new DatabaseException();
+       }
+      
+   }
+   // do here
+   @Override
+   public List<UserDTO> getCollaborators(int noteId)
+   {
+      String sql="SELECT USER.fullName,USER.userEmail\n"+
+      "FROM USER\n"+ 
+      "INNER JOIN Collaborators\n"+ 
+      "ON USER.id=Collaborators.userId\n"+ 
+      "where Collaborators.noteId=?;\n";
+      
+      List<UserDTO> list = jdbcTemplate.query(sql, new Object[] {noteId}, new GetCollaborators());
+      return list.size() > 0 ? list : null;
+   }
 	
+}
+
+class GetCollaborators implements org.springframework.jdbc.core.RowMapper<UserDTO>
+{
+   public UserDTO mapRow(ResultSet rs, int rowNum) throws SQLException
+   {
+      UserDTO user = new UserDTO();
+      user.setFullName(rs.getString("fullName"));
+      user.setUserEmail(rs.getString("userEmail"));
+      return user;
+   }
 }
 class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel> {
 	public NoteModel mapRow(ResultSet rs, int rowNum) throws SQLException {

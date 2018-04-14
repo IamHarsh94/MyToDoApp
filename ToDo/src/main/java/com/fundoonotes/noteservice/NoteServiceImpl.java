@@ -12,6 +12,7 @@ import com.fundoonotes.exception.UnAuthorizedAcess;
 import com.fundoonotes.userservice.UserModel;
 import com.fundoonotes.userservice.IuserDao;
 import com.fundoonotes.userservice.UserController;
+import com.fundoonotes.userservice.UserDTO;
 
 @Service
 public class NoteServiceImpl implements NoteService {
@@ -90,7 +91,9 @@ public class NoteServiceImpl implements NoteService {
 			NoteResponseDto dto = new NoteResponseDto(note);
 			
 			List<LabelResDTO> labels=noteDao.getLabelByNoteId(dto.getNoteId());
-			  
+			
+			List<UserDTO> collabolators=noteDao.getCollaborators(dto.getNoteId());
+			dto.setCollaborators(collabolators);
 			dto.setLabels(labels);
 		   notes.add(dto);
 		}
@@ -142,6 +145,19 @@ public class NoteServiceImpl implements NoteService {
          }
          noteDao.removeLabelFromNote(reqDTO);
       }
+   }
+
+   @Override
+   public UserModel addCollaborator(CollaboratorReqDTO personReqDTO)
+   {
+      UserModel user=userDao.getUserByEmailId(personReqDTO.getPersonEmail());
+      
+      if(user!=null)
+      {
+         noteDao.addcollaborator(user.getId(),personReqDTO);
+         return user;
+      }
+      return null;
    }
 
 }

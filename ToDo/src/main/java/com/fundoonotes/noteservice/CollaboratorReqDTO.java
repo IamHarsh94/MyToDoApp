@@ -2,16 +2,38 @@ package com.fundoonotes.noteservice;
 
 public class CollaboratorReqDTO
 {
-   private String personEmailID;
-
-   public String getPersonEmailID()
+   private int id;
+   private String personEmail;
+   private int noteId;
+   
+   public int getId()
    {
-      return personEmailID;
+      return id;
    }
 
-   public void setPersonEmailID(String personEmailID)
+   public void setId(int id)
    {
-      this.personEmailID = personEmailID;
+      this.id = id;
+   }
+
+   public String getPersonEmail()
+   {
+      return personEmail;
+   }
+
+   public void setPersonEmail(String personEmail)
+   {
+      this.personEmail = personEmail;
+   }
+
+   public int getNoteId()
+   {
+      return noteId;
+   }
+
+   public void setNoteId(int noteId)
+   {
+      this.noteId = noteId;
    }  
    
    

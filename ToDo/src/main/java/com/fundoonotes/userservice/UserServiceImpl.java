@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.fundoonotes.noteservice.CollaboratorReqDTO;
 import com.fundoonotes.utilservice.MailService;
 import com.fundoonotes.utilservice.TokenUtil;
 import com.fundoonotes.utilservice.UserValidation;
@@ -177,5 +178,6 @@ public class UserServiceImpl implements IUserService
 
       return userDao.getUserById(userId);
    }
+
 
 }

@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fundoonotes.userservice.CustomResponseDTO;
+import com.fundoonotes.userservice.IUserService;
+import com.fundoonotes.userservice.UserModel;
+
 /**
  * <p>
  * This is a Rest Controller for CRUD operation of note {@RestController}, we have added all
@@ -32,10 +36,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/note/")
 public class NotesController 
 {
-	
+   private static CustomResponseDTO response = new CustomResponseDTO();
+   
 	@Autowired 
 	private NoteService noteService;
-
+	
+	@Autowired
+	private IUserService userService;
+	
 	 /**
     * This rest API for new note creation with respective current loged user by
     * Getting the user id from request attribute 
@@ -105,8 +113,7 @@ public class NotesController
       else if(!reqDTO.isChecked())
       {
          noteService.removeLabel(reqDTO,userId);
-         return new ResponseEntity<>(HttpStatus.OK);
-         
+         return new ResponseEntity<>(HttpStatus.OK);  
       }
       else
       {
@@ -117,9 +124,17 @@ public class NotesController
    @RequestMapping(value="addcollaborator",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> addcollaborator(@RequestBody CollaboratorReqDTO personReqDTO, @RequestAttribute(name="userId") int userId)
    {
-      return null;
-//      noteService.saveLabel(labelObj, userId);
-//      return new ResponseEntity<>(HttpStatus.OK);
+      UserModel user=noteService.addCollaborator(personReqDTO);
+      
+      if(user!=null)
+      {
+         response.setMessage("Successfully add");
+         response.setStatusCode(200);
+         return new ResponseEntity<>(response,HttpStatus.OK);
+      } 
+      response.setMessage("Collaborator adding fail ");
+      response.setStatusCode(400);
+      return new ResponseEntity<>(response,HttpStatus.OK);
    }
    
    

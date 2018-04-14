@@ -3,16 +3,20 @@ package com.fundoonotes.utilservice;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.fundoonotes.exception.UnAuthorizedAcess;
 import com.fundoonotes.userservice.IUserService;
+import com.fundoonotes.userservice.UserController;
 
 @Component
 public class NotesInterceptor extends HandlerInterceptorAdapter
 {
+   private final org.apache.log4j.Logger LOGGER = LogManager.getLogger(UserController.class);
 
    private static final String OPTIONS = "OPTIONS";
    @Autowired
@@ -30,14 +34,16 @@ public class NotesInterceptor extends HandlerInterceptorAdapter
            
             if (userService.fetchUserByUserId(userId) != null)
             {
-            
-              
                req.setAttribute("userId", userId);
+            }
+            else {
+               LOGGER.error("Error while Authorization user"); 
+               throw new UnAuthorizedAcess();
             }
          } 
          catch (Exception e)
          {
-            e.printStackTrace();
+            LOGGER.error("Somthing wrong while Athorization",e); 
            
             return false;
          }

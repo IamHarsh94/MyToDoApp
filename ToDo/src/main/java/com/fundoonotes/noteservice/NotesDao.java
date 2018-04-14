@@ -2,6 +2,8 @@ package com.fundoonotes.noteservice;
 
 import java.util.List;
 
+import com.fundoonotes.userservice.UserDTO;
+
 public interface NotesDao {
 
 	void saveNote(NoteModel note);
@@ -23,5 +25,9 @@ public interface NotesDao {
    void addLabelToNote(AddRemoveLabelDTO reqDTO);
 
    void removeLabelFromNote(AddRemoveLabelDTO reqDTO);
+
+   void addcollaborator(int id, CollaboratorReqDTO personReqDTO);
+
+   List<UserDTO> getCollaborators(int noteId);
 	
 }

@@ -24,6 +24,10 @@ public class TokenUtil {
 
 	public static int verifyToken(String token) {
 		int id = 0;
+		if(token==null) {
+		   System.out.println("token null hai bhai");
+		}
+		
 		Claims claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
 		id = Integer.parseInt(claims.getId());
 		

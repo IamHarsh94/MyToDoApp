@@ -2,6 +2,8 @@ package com.fundoonotes.noteservice;
 
 import java.util.List;
 
+import com.fundoonotes.userservice.UserModel;
+
 public interface NoteService {
 
 
@@ -20,6 +22,8 @@ public interface NoteService {
    void addLabel(AddRemoveLabelDTO reqDTO, int userId);
 
    void removeLabel(AddRemoveLabelDTO reqDTO, int userId);
+
+   UserModel addCollaborator(CollaboratorReqDTO personReqDTO);
 	
 	
 	

@@ -3,6 +3,8 @@ package com.fundoonotes.noteservice;
 import java.util.Date;
 import java.util.List;
 
+import com.fundoonotes.userservice.UserDTO;
+
 public class NoteResponseDto {
 
 	private int noteId;
@@ -23,8 +25,10 @@ public class NoteResponseDto {
 	
 	private List<LabelResDTO> labelList;
 	
+	private List<UserDTO> collaborators;
+	
 	public NoteResponseDto() {
-
+	   
 	}
 	
 	public NoteResponseDto(NoteModel note) {
@@ -38,6 +42,26 @@ public class NoteResponseDto {
 		this.reminder =note.getReminder();
 	}
 
+
+   public List<LabelResDTO> getLabelList()
+   {
+      return labelList;
+   }
+
+   public void setLabelList(List<LabelResDTO> labelList)
+   {
+      this.labelList = labelList;
+   }
+
+   public List<UserDTO> getCollaborators()
+   {
+      return collaborators;
+   }
+
+   public void setCollaborators(List<UserDTO> collaborators)
+   {
+      this.collaborators = collaborators;
+   }
 
    public List<LabelResDTO> getLabels()
    {
