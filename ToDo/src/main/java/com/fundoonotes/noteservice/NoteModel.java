@@ -15,13 +15,23 @@ public class NoteModel {
 	private int status;
 	private String color;
 	private Date reminder;
-	
+	private String CollaboratorName;
 	
 	public NoteModel() {
 
 	}
 	
-	public Date getReminder() {
+	public String getCollaboratorName()
+   {
+      return CollaboratorName;
+   }
+
+   public void setCollaboratorName(String collaboratorName)
+   {
+      CollaboratorName = collaboratorName;
+   }
+
+   public Date getReminder() {
 		return reminder;
 	}
 
@@ -64,7 +74,14 @@ public class NoteModel {
 		this.reminder = updateDTO.getReminder();
 	}
 
-	public int getId() {
+	public NoteModel(CollaboratorResponseDTO collab)
+   {
+     this.title = collab.getTitle();
+     this.description=collab.getDescription();
+     this.CollaboratorName =collab.getFullName();
+   }
+
+   public int getId() {
 		return id;
 	}
 

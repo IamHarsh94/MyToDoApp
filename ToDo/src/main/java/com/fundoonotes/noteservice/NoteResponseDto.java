@@ -23,6 +23,8 @@ public class NoteResponseDto {
 	
 	private Date reminder;
 	
+	private String collaboratorName;
+	
 	private List<LabelResDTO> labelList;
 	
 	private List<UserDTO> collaborators;
@@ -40,8 +42,19 @@ public class NoteResponseDto {
 		this.color = note.getColor();
 		this.status=note.getStatus();
 		this.reminder =note.getReminder();
+		this.collaboratorName=note.getCollaboratorName();
 	}
 
+
+   public String getCollaboratorName()
+   {
+      return collaboratorName;
+   }
+
+   public void setCollaboratorName(String collaboratorName)
+   {
+      this.collaboratorName = collaboratorName;
+   }
 
    public List<LabelResDTO> getLabelList()
    {

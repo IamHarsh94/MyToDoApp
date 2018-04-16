@@ -26,8 +26,12 @@ public interface NotesDao {
 
    void removeLabelFromNote(AddRemoveLabelDTO reqDTO);
 
-   void addcollaborator(int id, CollaboratorReqDTO personReqDTO);
+   void addcollaborator(int id, CollaboratorReqDTO personReqDTO, int userId);
 
    List<UserDTO> getCollaborators(int noteId);
+
+   List<ResCollaboratorDTO> getSharedNoteIDAndUserId(int userId);
+
+   CollaboratorResponseDTO getSharedNotes(int noteId,int userId);
 	
 }

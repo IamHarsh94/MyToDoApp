@@ -152,7 +152,7 @@ public class UserController
       response.setMessage("User login failed");
       response.setStatusCode(400);
 
-      return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CONFLICT);
+      return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
    }
 
    /**

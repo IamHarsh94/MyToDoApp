@@ -124,13 +124,19 @@ public class NotesController
    @RequestMapping(value="addcollaborator",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> addcollaborator(@RequestBody CollaboratorReqDTO personReqDTO, @RequestAttribute(name="userId") int userId)
    {
-      UserModel user=noteService.addCollaborator(personReqDTO);
+      UserModel user=noteService.addCollaborator(personReqDTO,userId);
       
       if(user!=null)
       {
-         response.setMessage("Successfully add");
-         response.setStatusCode(200);
-         return new ResponseEntity<>(response,HttpStatus.OK);
+           if(user.getFullName()!=null)
+           {
+              response.setMessage("Successfully add");
+              response.setStatusCode(200);
+              return new ResponseEntity<>(response,HttpStatus.OK);
+           }
+           response.setMessage("This email already exist..");
+           response.setStatusCode(300);
+           return new ResponseEntity<>(response,HttpStatus.OK);
       } 
       response.setMessage("Collaborator adding fail ");
       response.setStatusCode(400);

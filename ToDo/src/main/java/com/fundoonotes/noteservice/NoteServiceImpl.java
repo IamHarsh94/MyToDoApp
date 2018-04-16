@@ -83,6 +83,18 @@ public class NoteServiceImpl implements NoteService {
 		user.setId(userId);
 		
 		List<NoteModel> list = noteDao.getNotesByUserId(userId);
+	
+		List<ResCollaboratorDTO> collabList=noteDao.getSharedNoteIDAndUserId(userId);
+		
+		if(collabList!=null) 
+		{
+		   for( ResCollaboratorDTO object:collabList){
+		      
+		      CollaboratorResponseDTO collab=noteDao.getSharedNotes(object.getNoteId(),object.getUserId());
+		      NoteModel obj = new NoteModel(collab);
+		      list.add(obj);
+		   }
+		}
 		
 		List<NoteResponseDto> notes = new ArrayList<>();
 		
@@ -148,14 +160,19 @@ public class NoteServiceImpl implements NoteService {
    }
 
    @Override
-   public UserModel addCollaborator(CollaboratorReqDTO personReqDTO)
+   public UserModel addCollaborator(CollaboratorReqDTO personReqDTO,int userId)
    {
       UserModel user=userDao.getUserByEmailId(personReqDTO.getPersonEmail());
-      
-      if(user!=null)
+      if(user.getId()==userId)
       {
-         noteDao.addcollaborator(user.getId(),personReqDTO);
+           user.setFullName(null);
+           return user;
+      
+      }else if(user!=null) {
+
+         noteDao.addcollaborator(user.getId(),personReqDTO,userId);
          return user;
+
       }
       return null;
    }

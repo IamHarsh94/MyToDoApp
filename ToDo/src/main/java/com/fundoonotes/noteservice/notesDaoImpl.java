@@ -153,10 +153,10 @@ public class notesDaoImpl implements NotesDao{
    }
 
    @Override
-   public void addcollaborator(int id,CollaboratorReqDTO personReqDTO)
+   public void addcollaborator(int id,CollaboratorReqDTO personReqDTO,int userId)
    {
-      String sql = "insert into Collaborators values(?,?,?)";
-      int num = jdbcTemplate.update(sql, new Object[] {personReqDTO.getId(),personReqDTO.getNoteId(),id});
+      String sql = "insert into Collaborators values(?,?,?,?)";
+      int num = jdbcTemplate.update(sql, new Object[] {personReqDTO.getId(),personReqDTO.getNoteId(),id,userId});
        if(num==0) {
          throw new DatabaseException();
        }
@@ -169,12 +169,33 @@ public class notesDaoImpl implements NotesDao{
       String sql="SELECT USER.fullName,USER.userEmail\n"+
       "FROM USER\n"+ 
       "INNER JOIN Collaborators\n"+ 
-      "ON USER.id=Collaborators.userId\n"+ 
+      "ON USER.id=Collaborators.sharedUserId\n"+ 
       "where Collaborators.noteId=?;\n";
       
       List<UserDTO> list = jdbcTemplate.query(sql, new Object[] {noteId}, new GetCollaborators());
       return list.size() > 0 ? list : null;
    }
+
+   @Override
+   public List<ResCollaboratorDTO> getSharedNoteIDAndUserId(int userId)
+   {
+      String sql="select * from Collaborators where sharedUserId=?;";
+      
+      List<ResCollaboratorDTO> list = jdbcTemplate.query(sql, new Object[] {userId}, new GetCollaboratorsObject());
+      return list.size() > 0 ? list : null;
+   }
+
+   @Override
+   public CollaboratorResponseDTO getSharedNotes(int noteId,int userId)
+   {
+      String sql="SELECT NOTES.title,NOTES.description,USER.fullName\n" + 
+            "FROM NOTES,USER  \n" + 
+            "where NOTES.id=? and USER.id=? ;";
+      
+      List<CollaboratorResponseDTO> list = jdbcTemplate.query(sql, new Object[] {noteId,userId}, new GetSharedNotes());
+      return list.size() > 0 ? list.get(0) : null;
+   }
+
 	
 }
 
@@ -186,6 +207,31 @@ class GetCollaborators implements org.springframework.jdbc.core.RowMapper<UserDT
       user.setFullName(rs.getString("fullName"));
       user.setUserEmail(rs.getString("userEmail"));
       return user;
+   }
+}
+
+class GetSharedNotes implements org.springframework.jdbc.core.RowMapper<CollaboratorResponseDTO>
+{
+   public CollaboratorResponseDTO mapRow(ResultSet rs, int rowNum) throws SQLException
+   {
+      CollaboratorResponseDTO note = new CollaboratorResponseDTO();
+      note.setTitle(rs.getString("title"));
+      note.setDescription(rs.getString("description"));
+      note.setFullName(rs.getString("fullName"));  
+      return note;
+   }
+}
+
+
+class GetCollaboratorsObject implements org.springframework.jdbc.core.RowMapper<ResCollaboratorDTO>
+{
+   public ResCollaboratorDTO mapRow(ResultSet rs, int rowNum) throws SQLException
+   {
+      ResCollaboratorDTO collab = new ResCollaboratorDTO();
+      collab.setNoteId(rs.getInt("noteId"));
+      collab.setSharedUserId(rs.getInt("sharedUserId"));
+      collab.setUserId(rs.getInt("userId"));
+      return collab;
    }
 }
 class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel> {
