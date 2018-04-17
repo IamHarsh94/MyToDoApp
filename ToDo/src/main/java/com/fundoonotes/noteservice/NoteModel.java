@@ -16,8 +16,19 @@ public class NoteModel {
 	private String color;
 	private Date reminder;
 	private String CollaboratorName;
+	private int ownerId;
 	
-	public NoteModel() {
+	public int getOwnerId()
+   {
+      return ownerId;
+   }
+
+   public void setOwnerId(int ownerId)
+   {
+      this.ownerId = ownerId;
+   }
+
+   public NoteModel() {
 
 	}
 	
@@ -76,9 +87,13 @@ public class NoteModel {
 
 	public NoteModel(CollaboratorResponseDTO collab)
    {
+	  this.id=collab.getNoteId();
      this.title = collab.getTitle();
      this.description=collab.getDescription();
      this.CollaboratorName =collab.getFullName();
+     this.color=collab.getColor();
+     this.ownerId=collab.getOwnerId();
+     
    }
 
    public int getId() {

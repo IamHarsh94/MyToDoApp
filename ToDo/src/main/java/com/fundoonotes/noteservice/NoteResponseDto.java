@@ -25,6 +25,8 @@ public class NoteResponseDto {
 	
 	private String collaboratorName;
 	
+	private int ownerId;
+	
 	private List<LabelResDTO> labelList;
 	
 	private List<UserDTO> collaborators;
@@ -43,8 +45,19 @@ public class NoteResponseDto {
 		this.status=note.getStatus();
 		this.reminder =note.getReminder();
 		this.collaboratorName=note.getCollaboratorName();
+		this.ownerId=note.getOwnerId();
 	}
 
+
+   public int getOwnerId()
+   {
+      return ownerId;
+   }
+
+   public void setOwnerId(int ownerId)
+   {
+      this.ownerId = ownerId;
+   }
 
    public String getCollaboratorName()
    {

@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
+
+import org.apache.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -15,20 +17,26 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import com.fundoonotes.exception.DatabaseException;
+import com.fundoonotes.userservice.UserController;
 import com.fundoonotes.userservice.UserDTO;
 import com.fundoonotes.userservice.UserModel;
+import com.fundoonotes.utilservice.DataBaseQueries;
 
 
 public class notesDaoImpl implements NotesDao{
-	
+  
+   private final org.apache.log4j.Logger LOGGER = LogManager.getLogger(UserController.class);
+
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
 	@Override
 	public void saveNote(NoteModel note) {
-		String INSERT_SQL = "insert into NOTES values(?,?,?,?,?,?,?,?,?)";	
+		
+		String INSERT_SQL = DataBaseQueries.getSavenotequery();
 		
 		KeyHolder holder = new GeneratedKeyHolder();
+		
 		int num = jdbcTemplate.update(new PreparedStatementCreator() {
 
 			@Override
@@ -56,12 +64,32 @@ public class notesDaoImpl implements NotesDao{
 		note.setId(noteId);
 	}
 
+	public void deleteCollaborator(int noteId) throws Exception  {
+       
+	   int num=jdbcTemplate.update(DataBaseQueries.getDeletecollaboratorquery(), new Object[] { noteId });
+      
+      if(num==0)
+      {
+        throw new DatabaseException();
+      }
+  }  
 	@Override
-	public void deleteNote(int noteId) {
-		int num=jdbcTemplate.update("DELETE FROM NOTES WHERE id=?", new Object[] { noteId });
-		if(num==0) {
-			throw new DatabaseException();
-		}
+	public void deleteNote(int noteId)
+	{
+	   try {
+	         deleteCollaborator(noteId);
+	      
+	      int num=jdbcTemplate.update(DataBaseQueries.getDeletenotequery(), new Object[] { noteId });
+         
+	      if(num==0)
+	      {
+	         throw new DatabaseException();
+	      }
+	   }catch(Exception e)
+	   {
+	      LOGGER.error("Error while deleting collaborator", e);
+	   }
+	    
 	}
 	
 	
@@ -69,64 +97,74 @@ public class notesDaoImpl implements NotesDao{
 	@Override
 	public void updateNote(NoteModel note) {
 		
-		
-		String sql = "update NOTES set title=?,description=?,lastUpdateDate=?,color=?,status=?,reminder=? where id=?";
+	   String sql = DataBaseQueries.getUpdatenotequery();
+      
 		int num = jdbcTemplate.update(sql, new Object[] {note.getTitle(),note.getDescription(),
 				note.getLastUpdateDate(),note.getColor(),note.getStatus(),note.getReminder(),note.getId()});
-		if( num == 0) {
+		
+		if( num == 0)
+		{
 			throw new DatabaseException();
 		}
 		
 	}
-
 	@Override
 	public NoteModel getNoteByNoteId(int noteId) {
-		String sql = "select * from NOTES where id=?";
-		List<NoteModel> list = jdbcTemplate.query(sql, new Object[] {noteId}, new MyMapperClass());
+	   
+	   String sql = DataBaseQueries.getSelectnotebynoteidquery();
 		
-		if(list.size()==0) {
-			
+	   List<NoteModel> list = jdbcTemplate.query(sql, new Object[] {noteId}, new MyMapperClass());
+		
+		if(list.size()==0)
+		{
 			throw new DatabaseException();
 		}
-	
 		return list.size() > 0 ? list.get(0) : null;
 	}
 	
 	@Override
 	public List<NoteModel> getNotesByUserId(int userId) {
-		String sql = "select * from NOTES where userId=?";
+		
+	   String sql =DataBaseQueries.getSelectnotebyuseridquery();
+	   
 		List<NoteModel> list = jdbcTemplate.query(sql, new Object[] {userId}, new MyMapperClass());
+		
 		return list;
 	}
 
 	@Override
 	public void saveLabel(LabelDTO labelObj) {
-		String sql = "insert into LABEL values(?,?,?)";
+	
+		String sql = DataBaseQueries.getSavelabelquery();
+		
 		int num = jdbcTemplate.update(sql, new Object[] {labelObj.getLabelId(),labelObj.getLabelTitle(),labelObj.getUser().getId()});
-		 if(num==0) {
+		 
+		if(num==0)
+		{
 			throw new DatabaseException();
-		 }
+		}
 		
 	}
 
 	@Override
 	public List<LabelDTO>getLabelsByUserId(int userId) {
-		String sql = "select * from LABEL where userId=?";
-		List<LabelDTO> list = jdbcTemplate.query(sql, new Object[] {userId}, new MyLabelMapperClass());
-		return list;
+		
+	   String sql = DataBaseQueries.getGetlabelbyuseridquery();
+		
+	   List<LabelDTO> list = jdbcTemplate.query(sql, new Object[] {userId}, new MyLabelMapperClass());
+		
+	   return list;
 
 	}
 
    @Override
    public List<LabelResDTO> getLabelByNoteId(int noteId)
    {
-      String sql = "SELECT LABEL.labelTitle,Note_Label.labelId\n" + 
-            "FROM LABEL \n" + 
-            "INNER JOIN Note_Label \n" + 
-            "ON Note_Label.labelId=LABEL.labelId \n" + 
-            "where Note_Label.noteId=?;";
+      
+      String sql = DataBaseQueries.getLabelandnoteLabeljoinquery();
       
       List<LabelResDTO> list = jdbcTemplate.query(sql, new Object[] {noteId}, new GetLabelMapperClass());
+      
       return list.size() > 0 ? list : null;
 
       
@@ -135,9 +173,13 @@ public class notesDaoImpl implements NotesDao{
    @Override
    public void addLabelToNote(AddRemoveLabelDTO reqDTO)
    {
-      String sql = "insert into Note_Label values(?,?)";
+     
+      String sql = DataBaseQueries.getSavenoteLabel();
+     
       int num = jdbcTemplate.update(sql, new Object[] {reqDTO.getNoteId(),reqDTO.getLabelId()});
-      if(num==0) {
+      
+      if(num==0)
+      {
         throw new DatabaseException();
       }
    }
@@ -145,54 +187,85 @@ public class notesDaoImpl implements NotesDao{
    @Override
    public void removeLabelFromNote(AddRemoveLabelDTO reqDTO)
    {
-      int num=jdbcTemplate.update("DELETE FROM Note_Label WHERE noteId=? and labelId=?", new Object[] { reqDTO.getNoteId(),reqDTO.getLabelId() });
-      if(num==0) {
+      int num=jdbcTemplate.update(DataBaseQueries.getDeletefromnoteLabelquery(), new Object[] { reqDTO.getNoteId(),reqDTO.getLabelId() });
+      
+      if(num==0)
+      {
          throw new DatabaseException();
       }
       
    }
-
+   
    @Override
-   public void addcollaborator(int id,CollaboratorReqDTO personReqDTO,int userId)
+   public boolean getRowFromCollaborator(int noteId,int userId)
    {
-      String sql = "insert into Collaborators values(?,?,?,?)";
-      int num = jdbcTemplate.update(sql, new Object[] {personReqDTO.getId(),personReqDTO.getNoteId(),id,userId});
-       if(num==0) {
-         throw new DatabaseException();
-       }
+    
+      String sql=DataBaseQueries.getSelectfromcollaboratorbyuseridandnoteid();
       
+      List<CollaboratorResponseDTO> list = jdbcTemplate.query(sql, new Object[] {userId,noteId}, new getRowFromCollaborator());
+      
+      return list.size() > 0 ? true: false;
    }
-   // do here
+   class getRowFromCollaborator implements org.springframework.jdbc.core.RowMapper<CollaboratorResponseDTO> 
+   {
+      public CollaboratorResponseDTO mapRow(ResultSet rs, int rowNum) throws SQLException
+      {
+         CollaboratorResponseDTO obj = new CollaboratorResponseDTO();   
+         obj.setNoteId(rs.getInt("noteId"));
+         obj.setOwnerId(rs.getInt("sharedUserId"));
+        return obj;
+      }
+
+   }
+   @Override
+   public boolean addcollaborator(int id,CollaboratorReqDTO personReqDTO,int userId)
+   {
+     boolean isPresent=getRowFromCollaborator(personReqDTO.getNoteId(),id); 
+     
+     if(!isPresent) {
+        String sql = DataBaseQueries.getInsertcollaboratorquery();
+        
+        int num = jdbcTemplate.update(sql, new Object[] {personReqDTO.getId(),personReqDTO.getNoteId(),id,userId});
+        
+        if(num==0)
+        {
+           throw new DatabaseException();
+         }
+        return true;
+     }
+     return false;
+     
+   }
+   
    @Override
    public List<UserDTO> getCollaborators(int noteId)
    {
-      String sql="SELECT USER.fullName,USER.userEmail\n"+
-      "FROM USER\n"+ 
-      "INNER JOIN Collaborators\n"+ 
-      "ON USER.id=Collaborators.sharedUserId\n"+ 
-      "where Collaborators.noteId=?;\n";
+    
+      String sql=DataBaseQueries.getGetcollaboratorbyuserandcollaboratorjoin(); 
       
       List<UserDTO> list = jdbcTemplate.query(sql, new Object[] {noteId}, new GetCollaborators());
+      
       return list.size() > 0 ? list : null;
    }
 
    @Override
    public List<ResCollaboratorDTO> getSharedNoteIDAndUserId(int userId)
    {
-      String sql="select * from Collaborators where sharedUserId=?;";
-      
+      String sql=DataBaseQueries.getSelectfromcollaboratorbyuserid();
+     
       List<ResCollaboratorDTO> list = jdbcTemplate.query(sql, new Object[] {userId}, new GetCollaboratorsObject());
+      
       return list.size() > 0 ? list : null;
    }
 
    @Override
-   public CollaboratorResponseDTO getSharedNotes(int noteId,int userId)
+   public CollaboratorResponseDTO getSharedNotes(int noteId,int userId) 
    {
-      String sql="SELECT NOTES.title,NOTES.description,USER.fullName\n" + 
-            "FROM NOTES,USER  \n" + 
-            "where NOTES.id=? and USER.id=? ;";
+     
+      String sql=DataBaseQueries.getSelectfromnoteanduser();
       
       List<CollaboratorResponseDTO> list = jdbcTemplate.query(sql, new Object[] {noteId,userId}, new GetSharedNotes());
+     
       return list.size() > 0 ? list.get(0) : null;
    }
 
@@ -215,9 +288,13 @@ class GetSharedNotes implements org.springframework.jdbc.core.RowMapper<Collabor
    public CollaboratorResponseDTO mapRow(ResultSet rs, int rowNum) throws SQLException
    {
       CollaboratorResponseDTO note = new CollaboratorResponseDTO();
+      
+      note.setNoteId(rs.getInt("id"));
       note.setTitle(rs.getString("title"));
       note.setDescription(rs.getString("description"));
-      note.setFullName(rs.getString("fullName"));  
+      note.setFullName(rs.getString("fullName")); 
+      note.setColor(rs.getString("color"));
+      
       return note;
    }
 }
@@ -234,9 +311,12 @@ class GetCollaboratorsObject implements org.springframework.jdbc.core.RowMapper<
       return collab;
    }
 }
-class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel> {
-	public NoteModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel>
+{
+	public NoteModel mapRow(ResultSet rs, int rowNum) throws SQLException
+	{
 		NoteModel note = new NoteModel();			
+		
 		note.setId(rs.getInt("id"));
 		note.setTitle(rs.getString("title"));
 		note.setDescription(rs.getString("description"));
@@ -244,13 +324,17 @@ class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel
 		note.setLastUpdateDate(rs.getDate("lastUpdateDate"));
 		note.setStatus(rs.getInt("status"));
 		note.setColor(rs.getString("color"));
+		
 		try {
-		java.util.Date date=null;
-		Timestamp timestamp = rs.getTimestamp("reminder");
-		if (timestamp != null)
-		    date = new java.util.Date(timestamp.getTime());
-			note.setReminder(date);
-		}catch(Exception e) {
+		   java.util.Date date=null;
+		   Timestamp timestamp = rs.getTimestamp("reminder");
+		
+		   if (timestamp != null) {
+		      date = new java.util.Date(timestamp.getTime());
+			   note.setReminder(date);
+		   }
+		}catch(Exception e)
+		{
 			e.printStackTrace();
 		}	
 		int userId = rs.getInt("userId");
@@ -261,8 +345,10 @@ class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel
 	}
 
 }
-class MyLabelMapperClass implements org.springframework.jdbc.core.RowMapper<LabelDTO> {
-   public LabelDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+class MyLabelMapperClass implements org.springframework.jdbc.core.RowMapper<LabelDTO>
+{
+   public LabelDTO mapRow(ResultSet rs, int rowNum) throws SQLException
+   {
       LabelDTO label = new LabelDTO();       
       label.setLabelId(rs.getInt("labelId"));
       label.setLabelTitle(rs.getString("labelTitle"));
@@ -276,11 +362,14 @@ class MyLabelMapperClass implements org.springframework.jdbc.core.RowMapper<Labe
 
 }
 
-class GetLabelMapperClass implements org.springframework.jdbc.core.RowMapper<LabelResDTO> {
-	public LabelResDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-	   LabelResDTO label = new LabelResDTO();			
-		 label.setLabelId(rs.getInt("labelId"));
-		 label.setLabelTitle(rs.getString("labelTitle"));
+class GetLabelMapperClass implements org.springframework.jdbc.core.RowMapper<LabelResDTO> 
+{
+   public LabelResDTO mapRow(ResultSet rs, int rowNum) throws SQLException
+   {
+	  
+      LabelResDTO label = new LabelResDTO();			
+		label.setLabelId(rs.getInt("labelId"));
+		label.setLabelTitle(rs.getString("labelTitle"));
 		return label;
 	}
 

@@ -234,16 +234,20 @@ public class UserController
     * @param user id which already set from user interceptor after validating
     * @return return the current loged user or appropriate response to user
     */
-   @RequestMapping(value = "user/getUser", method = RequestMethod.GET)
-   public ResponseEntity<?> getLogedUser(@RequestAttribute(name = "userId") int userId)
+   @RequestMapping(value = "user/getUser/{ownerId}", method = RequestMethod.GET)
+   public ResponseEntity<?> getLogedUser(@RequestAttribute(name = "userId") int userId,@PathVariable int ownerId)
    {
-
-      UserModel user = userService.fetchUserByUserId(userId);
-
-      if (user != null) {
+      UserModel user = null;
+      if(ownerId!=0)
+      {
+          user = userService.fetchUserByUserId(ownerId);
+      }else {
+          user = userService.fetchUserByUserId(userId); 
+      }
+      if (user != null)
+      {
          return new ResponseEntity<UserModel>(user, HttpStatus.OK);
       }
-
       response.setMessage("user not return");
       response.setStatusCode(409);
 

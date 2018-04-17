@@ -53,6 +53,7 @@ public class NoteServiceImpl implements NoteService {
 		   {
 	         throw new UnAuthorizedAcess();
 	      }
+		   
 		   noteDao.deleteNote(noteId);
 		}
 		 LOGGER.info("Notes not present in db of "+noteId+" note id");
@@ -83,7 +84,7 @@ public class NoteServiceImpl implements NoteService {
 		user.setId(userId);
 		
 		List<NoteModel> list = noteDao.getNotesByUserId(userId);
-	
+		
 		List<ResCollaboratorDTO> collabList=noteDao.getSharedNoteIDAndUserId(userId);
 		
 		if(collabList!=null) 
@@ -91,6 +92,7 @@ public class NoteServiceImpl implements NoteService {
 		   for( ResCollaboratorDTO object:collabList){
 		      
 		      CollaboratorResponseDTO collab=noteDao.getSharedNotes(object.getNoteId(),object.getUserId());
+		      collab.setOwnerId(object.getUserId());
 		      NoteModel obj = new NoteModel(collab);
 		      list.add(obj);
 		   }
@@ -163,16 +165,24 @@ public class NoteServiceImpl implements NoteService {
    public UserModel addCollaborator(CollaboratorReqDTO personReqDTO,int userId)
    {
       UserModel user=userDao.getUserByEmailId(personReqDTO.getPersonEmail());
+      
       if(user.getId()==userId)
       {
            user.setFullName(null);
            return user;
       
-      }else if(user!=null) {
-
-         noteDao.addcollaborator(user.getId(),personReqDTO,userId);
-         return user;
-
+      }
+      else if(user!=null)
+      {
+          
+         boolean isAdd=noteDao.addcollaborator(user.getId(),personReqDTO,userId);
+            
+         if(!isAdd)
+            {     
+               user.setFullName(null);
+               return user;
+            }
+            return user;
       }
       return null;
    }
