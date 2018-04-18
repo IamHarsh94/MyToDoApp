@@ -1,5 +1,7 @@
 package com.fundoonotes.userservice;
 
+import com.fundoonotes.noteservice.CollaboratorReqDTO;
+
 public interface IuserDao 
 {
 	boolean save(UserModel user);
@@ -17,4 +19,7 @@ public interface IuserDao
 	void activateUser(UserModel user);
 	
 	UserModel getUserById(int userId);
+
+   void removeCollaborator(int noteId, int id);
+
 }

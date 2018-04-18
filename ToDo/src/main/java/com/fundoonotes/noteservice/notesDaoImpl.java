@@ -213,6 +213,7 @@ public class notesDaoImpl implements NotesDao{
          CollaboratorResponseDTO obj = new CollaboratorResponseDTO();   
          obj.setNoteId(rs.getInt("noteId"));
          obj.setOwnerId(rs.getInt("sharedUserId"));
+         
         return obj;
       }
 

@@ -37,69 +37,69 @@ import com.fundoonotes.userservice.UserModel;
 public class NotesController 
 {
    private static CustomResponseDTO response = new CustomResponseDTO();
-   
-	@Autowired 
-	private NoteService noteService;
-	
-	@Autowired
-	private IUserService userService;
-	
-	 /**
+
+   @Autowired 
+   private NoteService noteService;
+
+   @Autowired
+   private IUserService userService;
+
+   /**
     * This rest API for new note creation with respective current loged user by
     * Getting the user id from request attribute 
     * 
     * @param request DTO Object to be save the note
     * @return Response Note DTo Object with HTTP status.
     */
-	@RequestMapping(value="createNote",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createNote(@RequestBody CreateNoteDto newNoteDto,@RequestAttribute(name="userId") int userId)
-	{
-	  
-		NoteResponseDto noteResObj= noteService.saveNote(newNoteDto, userId);
-		return new ResponseEntity<NoteResponseDto>(noteResObj,HttpStatus.OK);
-		
-	}
-	
-	@RequestMapping(value="delete/{noteId}",method =RequestMethod.DELETE ,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> delete(HttpServletRequest req,@PathVariable int noteId,@RequestAttribute(name="userId") int userId)
-	{
-		
-	   noteService.delete(userId,noteId);
-		return new ResponseEntity<String>(HttpStatus.OK);
-	}
+   @RequestMapping(value="createNote",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> createNote(@RequestBody CreateNoteDto newNoteDto,@RequestAttribute(name="userId") int userId)
+   {
 
-	@RequestMapping(value="updateNote",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateNote(@RequestBody UpdateNoteDto updateDTO,HttpServletRequest req,@RequestAttribute(name="userId") int userId) 
-	{
-		
-		NoteResponseDto resNote=noteService.updateNote(updateDTO,userId);
-		return new ResponseEntity<NoteResponseDto>(resNote,HttpStatus.OK);
-	}
-	
-	@RequestMapping(value="getNotes",method =RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getNotes(HttpServletRequest req,@RequestAttribute(name="userId") int userId)
-	{
-		
-		List<NoteResponseDto>notes=noteService.getNotes(userId);
-		return new ResponseEntity<List<NoteResponseDto>>(notes,HttpStatus.OK);
-	}
-	
-	@RequestMapping(value="createLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> createLabel(@RequestBody  LabelDTO labelObj,@RequestAttribute(name="userId") int userId)
-	{
-		noteService.saveLabel(labelObj, userId);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-	
+      NoteResponseDto noteResObj= noteService.saveNote(newNoteDto, userId);
+      return new ResponseEntity<NoteResponseDto>(noteResObj,HttpStatus.OK);
 
-	@RequestMapping(value="getLabels",method =RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getlabels(HttpServletRequest req,@RequestAttribute(name="userId") int userId)
-	{
-		
-		List<LabelDTO>labels=noteService.getLabels(userId);
-		return new ResponseEntity<List>(labels,HttpStatus.OK);
-	}
-	
+   }
+
+   @RequestMapping(value="delete/{noteId}",method =RequestMethod.DELETE ,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> delete(HttpServletRequest req,@PathVariable int noteId,@RequestAttribute(name="userId") int userId)
+   {
+
+      noteService.delete(userId,noteId);
+      return new ResponseEntity<String>(HttpStatus.OK);
+   }
+
+   @RequestMapping(value="updateNote",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> updateNote(@RequestBody UpdateNoteDto updateDTO,HttpServletRequest req,@RequestAttribute(name="userId") int userId) 
+   {
+
+      NoteResponseDto resNote=noteService.updateNote(updateDTO,userId);
+      return new ResponseEntity<NoteResponseDto>(resNote,HttpStatus.OK);
+   }
+
+   @RequestMapping(value="getNotes",method =RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> getNotes(HttpServletRequest req,@RequestAttribute(name="userId") int userId)
+   {
+
+      List<NoteResponseDto>notes=noteService.getNotes(userId);
+      return new ResponseEntity<List<NoteResponseDto>>(notes,HttpStatus.OK);
+   }
+
+   @RequestMapping(value="createLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> createLabel(@RequestBody  LabelDTO labelObj,@RequestAttribute(name="userId") int userId)
+   {
+      noteService.saveLabel(labelObj, userId);
+      return new ResponseEntity<>(HttpStatus.OK);
+   }
+
+
+   @RequestMapping(value="getLabels",method =RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> getlabels(HttpServletRequest req,@RequestAttribute(name="userId") int userId)
+   {
+
+      List<LabelDTO>labels=noteService.getLabels(userId);
+      return new ResponseEntity<List>(labels,HttpStatus.OK);
+   }
+
 
    @RequestMapping(value="addRemoveLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> addRemoveLabel(@RequestBody  AddRemoveLabelDTO reqDTO,@RequestAttribute(name="userId") int userId)
@@ -108,7 +108,7 @@ public class NotesController
       {
          noteService.addLabel(reqDTO,userId);   
          return new ResponseEntity<>(HttpStatus.OK);
-         
+
       }
       else if(!reqDTO.isChecked())
       {
@@ -120,28 +120,30 @@ public class NotesController
          return new ResponseEntity<>(HttpStatus.CONFLICT);
       }       
    }
-   
-   @RequestMapping(value="addcollaborator",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
+
+   @RequestMapping(value="addRemovecollaborator",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> addcollaborator(@RequestBody CollaboratorReqDTO personReqDTO, @RequestAttribute(name="userId") int userId)
    {
-      UserModel user=noteService.addCollaborator(personReqDTO,userId);
+      UserModel user=noteService.addRemoveCollaborator(personReqDTO,userId);
+
+        
+         if(user.getFullName()!=null && user.getPassWord()!=null)
+         {
+            response.setMessage("Successfully add");
+            response.setStatusCode(200);
+           
+         }else if(user.getPassWord()==null) 
+         {
+            response.setMessage("Successfully remove");
+            response.setStatusCode(201);
+         
+         }else if(user.getFullName()==null){
+
+            response.setMessage("This email already exist..");
+            response.setStatusCode(300);   
+         }
+         return new ResponseEntity<>(response,HttpStatus.OK);
+           
       
-      if(user!=null)
-      {
-           if(user.getFullName()!=null)
-           {
-              response.setMessage("Successfully add");
-              response.setStatusCode(200);
-              return new ResponseEntity<>(response,HttpStatus.OK);
-           }
-           response.setMessage("This email already exist..");
-           response.setStatusCode(300);
-           return new ResponseEntity<>(response,HttpStatus.OK);
-      } 
-      response.setMessage("Collaborator adding fail ");
-      response.setStatusCode(400);
-      return new ResponseEntity<>(response,HttpStatus.OK);
    }
-   
-   
 }

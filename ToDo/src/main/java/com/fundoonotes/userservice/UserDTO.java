@@ -7,7 +7,18 @@ public class UserDTO {
 	private String confirmpassword;
 	private String mobileNum;
 	private String address;
-	public String getFullName() {
+	
+	
+	public UserDTO()
+   {
+     
+   }
+   public UserDTO(UserModel object)
+   {
+	   this.fullName = object.getFullName();
+	   this.userEmail = object.getUserEmail();
+   }
+   public String getFullName() {
 		return fullName;
 	}
 	public void setFullName(String fullName) {

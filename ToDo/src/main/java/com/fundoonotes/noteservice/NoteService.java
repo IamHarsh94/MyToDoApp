@@ -23,7 +23,9 @@ public interface NoteService {
 
    void removeLabel(AddRemoveLabelDTO reqDTO, int userId);
 
-   UserModel addCollaborator(CollaboratorReqDTO personReqDTO, int userId);
+   UserModel addRemoveCollaborator(CollaboratorReqDTO personReqDTO, int userId);
+
+   void removeCollaborator(CollaboratorReqDTO personReqDTO);
 	
 	
 	

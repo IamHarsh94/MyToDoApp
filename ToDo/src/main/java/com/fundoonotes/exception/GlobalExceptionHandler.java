@@ -20,6 +20,13 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
 	}
 	
+	@ExceptionHandler(value = UserNotExistException.class)
+   public ResponseEntity<CustomResponseDTO> userNotExistsExceptionHandler(UserNotExistException e) {
+      CustomResponseDTO response = e.getResponse();
+      logger.error(e.getMessage());
+      return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
+   }
+	
 	@ExceptionHandler(value = DatabaseException.class)
 	public ResponseEntity<CustomResponseDTO> databaseExceptionHandler(DatabaseException e) {
 		return new ResponseEntity<>(e.getResponse(), HttpStatus.CONFLICT);

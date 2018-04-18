@@ -4,8 +4,19 @@ public class CollaboratorReqDTO
 {
    private int id;
    private String personEmail;
+   private String removeUserMail;
    private int noteId;
    
+   public String getRemoveUserMail()
+   {
+      return removeUserMail;
+   }
+
+   public void setRemoveUserMail(String removeUserMail)
+   {
+      this.removeUserMail = removeUserMail;
+   }
+
    public int getId()
    {
       return id;

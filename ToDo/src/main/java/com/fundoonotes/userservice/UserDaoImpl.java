@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.fundoonotes.exception.DatabaseException;
+import com.fundoonotes.exception.UserNotExistException;
+import com.fundoonotes.noteservice.CollaboratorReqDTO;
+import com.fundoonotes.utilservice.DataBaseQueries;
 
 public class UserDaoImpl implements IuserDao
 {
@@ -51,8 +54,12 @@ public class UserDaoImpl implements IuserDao
       String sql = "select * from USER where userEmail=?";
 
       List<UserModel> list = jdbcTemplate.query(sql, new Object[] { UserEmail }, new MyMapper());
-
-      return list.size() > 0 ? list.get(0) : null;
+     
+     if(list.size()==0)
+      {
+        throw new UserNotExistException();
+     }
+      return list.get(0);
    }
 
    /**
@@ -148,5 +155,17 @@ public class UserDaoImpl implements IuserDao
       String sql = "select * from USER where id=?";
       List<UserModel> list = jdbcTemplate.query(sql, new Object[] { userId }, new MyMapper());
       return list.size() > 0 ? list.get(0) : null;
+   }
+
+   @Override
+   public void removeCollaborator(int noteId,int userId)
+   {
+      int num=jdbcTemplate.update("delete from Collaborators where noteId=? and sharedUserId=?;", new Object[] {noteId,userId });
+      
+      if(num==0)
+      {
+         throw new DatabaseException();
+      }
+      
    }
 }

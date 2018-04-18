@@ -3,7 +3,8 @@ package com.fundoonotes.userservice;
 public class CustomResponseDTO {
 	private String message;
 	private int status;
-	public String getMessage() {
+	
+   public String getMessage() {
 		return message;
 	}
 	public void setMessage(String message) {
