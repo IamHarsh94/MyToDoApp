@@ -35,7 +35,7 @@
 	<bean id="userService" class="com.fundoonotes.userservice.UserServiceImpl" />
 	<bean id="noteService" class="com.fundoonotes.noteservice.NoteServiceImpl" />
 	<bean id="noteDao" class="com.fundoonotes.noteservice.notesDaoImpl" />
-	
+	<bean id="fbConnection" class="com.fundoonotes.sociallogin.facebookConnection" />
 	
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
