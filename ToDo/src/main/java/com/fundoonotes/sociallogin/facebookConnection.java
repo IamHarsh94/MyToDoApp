@@ -19,7 +19,7 @@ public class facebookConnection
       String fbLoginURL = "";
       try {
          // creating the url with passing the app id and redirecting url
-         fbLoginURL = "http://www.facebook.com/dialog/oauth?" + "client_id=" +applicationId+ "&redirect_uri="
+         fbLoginURL = "https://www.facebook.com/dialog/oauth?" + "client_id=" +applicationId+ "&redirect_uri="
                + URLEncoder.encode(redirectUrl, "UTF-8") + "&state=123&response_type=code"
                + "&scope=public_profile,email";
          

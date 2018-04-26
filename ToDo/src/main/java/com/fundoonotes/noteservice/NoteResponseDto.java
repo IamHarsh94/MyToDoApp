@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.fundoonotes.userservice.UserDTO;
+import com.mysql.jdbc.Blob;
 
 public class NoteResponseDto {
 
@@ -27,7 +28,20 @@ public class NoteResponseDto {
 	
 	private int ownerId;
 	
-	private List<LabelResDTO> labelList;
+	private String image;
+	
+	
+   public String getImage()
+   {
+      return image;
+   }
+
+   public void setImage(String image)
+   {
+      this.image = image;
+   }
+
+   private List<LabelResDTO> labelList;
 	
 	private List<UserDTO> collaborators;
 	
@@ -46,6 +60,7 @@ public class NoteResponseDto {
 		this.reminder =note.getReminder();
 		this.collaboratorName=note.getCollaboratorName();
 		this.ownerId=note.getOwnerId();
+		this.image=note.getImage();
 	}
 
 

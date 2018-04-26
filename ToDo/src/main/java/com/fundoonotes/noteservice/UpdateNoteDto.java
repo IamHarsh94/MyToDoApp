@@ -2,6 +2,8 @@ package com.fundoonotes.noteservice;
 
 import java.util.Date;
 
+import com.mysql.jdbc.Blob;
+
 public class UpdateNoteDto {
 
 	private int noteId;
@@ -10,8 +12,19 @@ public class UpdateNoteDto {
 	private String color;
 	private int status; 
 	private Date reminder;
-	
-	public String getTitle() {
+	private String image;
+
+	  public String getImage()
+   {
+      return image;
+   }
+
+   public void setImage(String image)
+   {
+      this.image = image;
+   }
+
+   public String getTitle() {
 		return title;
 	}
 

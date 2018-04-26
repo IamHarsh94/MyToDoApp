@@ -3,7 +3,7 @@ package com.fundoonotes.utilservice;
 public class DataBaseQueries
 {
 
-   private final static String saveNoteQuery="insert into NOTES values(?,?,?,?,?,?,?,?,?)";
+   private final static String saveNoteQuery="insert into NOTES values(?,?,?,?,?,?,?,?,?,?)";
    
    private final static String selectNoteByNoteIdQuery="select * from NOTES where id=?";
    
@@ -13,7 +13,7 @@ public class DataBaseQueries
    
    private final static String deleteNoteQuery="DELETE FROM NOTES WHERE id=?";
    
-   private final static String updateNoteQuery="update NOTES set title=?,description=?,lastUpdateDate=?,color=?,status=?,reminder=? where id=?";
+   private final static String updateNoteQuery="update NOTES set title=?,description=?,lastUpdateDate=?,color=?,status=?,reminder=?,image=? where id=?";
    
    private final static String saveLabelQuery="insert into LABEL values(?,?,?)";
   

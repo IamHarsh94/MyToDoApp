@@ -21,6 +21,7 @@ import com.fundoonotes.userservice.UserController;
 import com.fundoonotes.userservice.UserDTO;
 import com.fundoonotes.userservice.UserModel;
 import com.fundoonotes.utilservice.DataBaseQueries;
+import com.mysql.jdbc.Blob;
 
 
 public class notesDaoImpl implements NotesDao{
@@ -51,6 +52,7 @@ public class notesDaoImpl implements NotesDao{
 				ps.setString(7,note.getColor());
 				ps.setInt(8, note.getStatus());
 				ps.setDate(9, null);
+				ps.setString(10, note.getImage());
 				return ps;
 			}
 		}, holder);
@@ -98,9 +100,9 @@ public class notesDaoImpl implements NotesDao{
 	public void updateNote(NoteModel note) {
 		
 	   String sql = DataBaseQueries.getUpdatenotequery();
-      
+	      
 		int num = jdbcTemplate.update(sql, new Object[] {note.getTitle(),note.getDescription(),
-				note.getLastUpdateDate(),note.getColor(),note.getStatus(),note.getReminder(),note.getId()});
+				note.getLastUpdateDate(),note.getColor(),note.getStatus(),note.getReminder(),note.getImage(),note.getId()});
 		
 		if( num == 0)
 		{
@@ -325,7 +327,7 @@ class MyMapperClass implements org.springframework.jdbc.core.RowMapper<NoteModel
 		note.setLastUpdateDate(rs.getDate("lastUpdateDate"));
 		note.setStatus(rs.getInt("status"));
 		note.setColor(rs.getString("color"));
-		
+		note.setImage(rs.getString("image"));
 		try {
 		   java.util.Date date=null;
 		   Timestamp timestamp = rs.getTimestamp("reminder");

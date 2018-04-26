@@ -1,6 +1,8 @@
 package com.fundoonotes.noteservice;
+import java.io.IOException;
 import java.util.List;
 
+import javax.mail.Multipart;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,16 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fundoonotes.userservice.CustomResponseDTO;
 import com.fundoonotes.userservice.IUserService;
 import com.fundoonotes.userservice.UserModel;
+import com.fundoonotes.utilservice.UrlData;
+import com.fundoonotes.utilservice.getDatabyJsoup;
 
 /**
  * <p>
@@ -71,7 +78,7 @@ public class NotesController
    @RequestMapping(value="updateNote",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> updateNote(@RequestBody UpdateNoteDto updateDTO,HttpServletRequest req,@RequestAttribute(name="userId") int userId) 
    {
-
+      
       NoteResponseDto resNote=noteService.updateNote(updateDTO,userId);
       return new ResponseEntity<NoteResponseDto>(resNote,HttpStatus.OK);
    }
@@ -99,7 +106,6 @@ public class NotesController
       List<LabelDTO>labels=noteService.getLabels(userId);
       return new ResponseEntity<List>(labels,HttpStatus.OK);
    }
-
 
    @RequestMapping(value="addRemoveLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> addRemoveLabel(@RequestBody  AddRemoveLabelDTO reqDTO,@RequestAttribute(name="userId") int userId)
@@ -144,6 +150,31 @@ public class NotesController
          }
          return new ResponseEntity<>(response,HttpStatus.OK);
            
-      
    }
+   
+   @RequestMapping(value="imageUpload",method =RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_VALUE)
+   public void imageupload(@RequestBody UpdateNoteDto imageReqDTO,HttpServletRequest req,@RequestAttribute(name="userId") int userId) 
+   {
+       
+     noteService.uploadImage(imageReqDTO,userId);
+     
+   }
+
+   @RequestMapping(value="getdata",method =RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> urlData(HttpServletRequest req,@RequestAttribute(name="userId") int userId) 
+   {
+      String url="www.irctc.co.in"; 
+      //String url=req.getHeader("url");
+      getDatabyJsoup data=new getDatabyJsoup();
+      UrlData info=null;
+      try {
+         info = data.getUrlMetaData(url);
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
+      return new ResponseEntity<UrlData>(info,HttpStatus.OK);
+      
+     
+   }
+   
 }

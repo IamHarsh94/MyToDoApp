@@ -1,9 +1,9 @@
 package com.fundoonotes.noteservice;
 
 import java.util.List;
-
+import org.springframework.stereotype.Service;
 import com.fundoonotes.userservice.UserModel;
-
+@Service
 public interface NoteService {
 
 
@@ -26,6 +26,8 @@ public interface NoteService {
    UserModel addRemoveCollaborator(CollaboratorReqDTO personReqDTO, int userId);
 
    void removeCollaborator(CollaboratorReqDTO personReqDTO);
+
+   void uploadImage(UpdateNoteDto imageReqDTO, int userId);
 	
 	
 	

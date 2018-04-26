@@ -3,6 +3,7 @@ package com.fundoonotes.noteservice;
 import java.util.Date;
 
 import com.fundoonotes.userservice.UserModel;
+import com.mysql.jdbc.Blob;
 
 public class NoteModel {
 
@@ -17,8 +18,21 @@ public class NoteModel {
 	private Date reminder;
 	private String CollaboratorName;
 	private int ownerId;
+	private String image;
 	
-	public int getOwnerId()
+
+
+   public String getImage()
+   {
+      return image;
+   }
+
+   public void setImage(String image)
+   {
+      this.image = image;
+   }
+
+   public int getOwnerId()
    {
       return ownerId;
    }
@@ -83,6 +97,7 @@ public class NoteModel {
 		this.color =updateDTO.getColor();
 		this.status=updateDTO.getStatus();
 		this.reminder = updateDTO.getReminder();
+		this.image=updateDTO.getImage();
 	}
 
 	public NoteModel(CollaboratorResponseDTO collab)

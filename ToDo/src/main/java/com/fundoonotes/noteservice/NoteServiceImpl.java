@@ -63,7 +63,7 @@ public class NoteServiceImpl implements NoteService {
    @Override
    public NoteResponseDto updateNote(UpdateNoteDto updateDTO, int tokenId) {
       UserModel user = userDao.getUserById(tokenId);
-
+      
       NoteModel note =new NoteModel(updateDTO);
       note.setTitle(updateDTO.getTitle());
       note.setDescription(updateDTO.getDescription());
@@ -71,7 +71,7 @@ public class NoteServiceImpl implements NoteService {
       Date updatedAt = new Date();
       note.setLastUpdateDate(updatedAt);
       note.setUser(user);
-
+      
       note.setReminder(updateDTO.getReminder());
       noteDao.updateNote(note);
 
@@ -104,7 +104,7 @@ public class NoteServiceImpl implements NoteService {
       for (NoteModel note : list)
       {
          NoteResponseDto dto = new NoteResponseDto(note);
-
+         
          List<LabelResDTO> labels=noteDao.getLabelByNoteId(dto.getNoteId());
 
          List<UserDTO> collabolators=noteDao.getCollaborators(dto.getNoteId());
@@ -199,6 +199,13 @@ public class NoteServiceImpl implements NoteService {
    {
 
 
+   }
+
+   @Override
+   public void uploadImage(UpdateNoteDto imageReqDTO, int userId)
+   {
+     
+      
    }
 
 

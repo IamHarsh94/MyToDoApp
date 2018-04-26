@@ -28,7 +28,7 @@ public class FacebookLoginController
    private NoteService noteService;
    
    // This api hit from user 
-   @RequestMapping(value = "facebookwithlogin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+   @RequestMapping(value = "facebookwithlogin", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
    public void loginwithFB(HttpServletRequest req, HttpServletResponse res)
    {  
       System.out.println("in fb controller");
@@ -38,6 +38,7 @@ public class FacebookLoginController
       try {
          // redirecting to fb url
          res.sendRedirect(FBURL);
+         
       } catch (IOException e) {
          
          e.printStackTrace();
@@ -45,7 +46,7 @@ public class FacebookLoginController
       
    }
    // fb hiting this api 
-   @RequestMapping(value = "facebookconnection", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+   @RequestMapping(value = "facebookconnection", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
    public void connectwithFB(HttpServletRequest req, HttpServletResponse res)
    {  
       System.out.println("Response come from fb");
