@@ -2,6 +2,19 @@ package com.fundoonotes.utilservice;
 
 public class UrlData
 {
+   private int id;
+   
+   private int nodeId;
+   
+   public int getNodeId()
+   {
+      return nodeId;
+   }
+
+   public void setNodeId(int nodeId)
+   {
+      this.nodeId = nodeId;
+   }
 
    private String title;
    
@@ -22,6 +35,16 @@ public class UrlData
       this.domain=domain;
    }
    
+   public int getId()
+   {
+      return id;
+   }
+
+   public void setId(int id)
+   {
+      this.id = id;
+   }
+
    public String getTitle()
    {
       return title;

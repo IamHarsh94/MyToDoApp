@@ -21,6 +21,7 @@ import com.fundoonotes.userservice.UserController;
 import com.fundoonotes.userservice.UserDTO;
 import com.fundoonotes.userservice.UserModel;
 import com.fundoonotes.utilservice.DataBaseQueries;
+import com.fundoonotes.utilservice.UrlData;
 import com.mysql.jdbc.Blob;
 
 
@@ -272,6 +273,31 @@ public class notesDaoImpl implements NotesDao{
       return list.size() > 0 ? list.get(0) : null;
    }
 
+   @Override
+   public void saveUrlDetails(UrlData info)
+   {
+     String sql="insert into Note_URl values(?,?,?,?,?)";
+     
+     int num = jdbcTemplate.update(sql, new Object[] {info.getId(),info.getNodeId(),info.getTitle(),
+           info.getImageUrl(),info.getDomain()});
+     
+     if(num==0)
+     {
+        throw new DatabaseException();
+     }
+      
+   }
+
+   @Override
+   public List<UrlData> getUrlByNoteId(int noteId)
+   {
+      String sql="select * from Note_URl where noteId=?";
+      List<UrlData> list = jdbcTemplate.query(sql, new Object[] {noteId}, new GetUrlClass());
+      
+      return list.size() > 0 ? list : null;
+      
+   }
+
 	
 }
 
@@ -377,3 +403,20 @@ class GetLabelMapperClass implements org.springframework.jdbc.core.RowMapper<Lab
 	}
 
 }
+
+class GetUrlClass implements org.springframework.jdbc.core.RowMapper<UrlData> 
+{
+   public UrlData mapRow(ResultSet rs, int rowNum) throws SQLException
+   {
+     
+      UrlData obj = new UrlData();
+       obj.setId(rs.getInt("id"));
+       obj.setDomain(rs.getString("domain"));
+       obj.setImageUrl(rs.getString("imageUrl"));
+       obj.setNodeId(rs.getInt("noteId"));
+       obj.setTitle(rs.getString("title"));
+      return obj;
+   }
+
+}
+

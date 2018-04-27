@@ -3,6 +3,7 @@ package com.fundoonotes.noteservice;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import com.fundoonotes.userservice.UserModel;
+import com.fundoonotes.utilservice.UrlData;
 @Service
 public interface NoteService {
 
@@ -28,6 +29,8 @@ public interface NoteService {
    void removeCollaborator(CollaboratorReqDTO personReqDTO);
 
    void uploadImage(UpdateNoteDto imageReqDTO, int userId);
+
+   void saveNoteUrl(UrlData info, int i);
 	
 	
 	

@@ -1,4 +1,5 @@
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/IuserDao.java
+/home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/UrlData.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/UserModel.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/noteservice/NoteService.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/MailHelperService.java
@@ -23,6 +24,7 @@
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/CORSFilter.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/exception/RegisterErrors.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/UserDaoImpl.java
+/home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/noteservice/JsoupUrlDTO.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/exception/UnAuthorizedAcess.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/DataBaseQueries.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/EncryptPassword.java

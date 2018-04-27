@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.fundoonotes.exception.UnAuthorizedAcess;
 import com.fundoonotes.userservice.UserModel;
+import com.fundoonotes.utilservice.UrlData;
 import com.fundoonotes.userservice.CustomResponseDTO;
 import com.fundoonotes.userservice.IuserDao;
 import com.fundoonotes.userservice.UserController;
@@ -103,13 +104,14 @@ public class NoteServiceImpl implements NoteService {
 
       for (NoteModel note : list)
       {
-         NoteResponseDto dto = new NoteResponseDto(note);
          
+         NoteResponseDto dto = new NoteResponseDto(note);
+         List<UrlData> urls=noteDao.getUrlByNoteId(dto.getNoteId());
          List<LabelResDTO> labels=noteDao.getLabelByNoteId(dto.getNoteId());
-
          List<UserDTO> collabolators=noteDao.getCollaborators(dto.getNoteId());
          dto.setCollaborators(collabolators);
          dto.setLabels(labels);
+         dto.setUrls(urls);
          notes.add(dto);
       }
       return notes;
@@ -206,6 +208,13 @@ public class NoteServiceImpl implements NoteService {
    {
      
       
+   }
+
+   @Override
+   public void saveNoteUrl(UrlData info,int noteId)
+   {
+      info.setNodeId(noteId);
+      noteDao.saveUrlDetails(info);
    }
 
 

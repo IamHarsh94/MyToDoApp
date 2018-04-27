@@ -1,5 +1,6 @@
 package com.fundoonotes.noteservice;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.mail.Multipart;
@@ -160,21 +161,26 @@ public class NotesController
      
    }
 
-   @RequestMapping(value="getdata",method =RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-   public ResponseEntity<?> urlData(HttpServletRequest req,@RequestAttribute(name="userId") int userId) 
+  
+   @RequestMapping(value="getdata",method =RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> urlData(@RequestBody JsoupUrlDTO jsoupurldto ,HttpServletRequest req,@RequestAttribute(name="userId") int userId) 
    {
-      String url="www.irctc.co.in"; 
-      //String url=req.getHeader("url");
-      getDatabyJsoup data=new getDatabyJsoup();
-      UrlData info=null;
-      try {
-         info = data.getUrlMetaData(url);
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-      return new ResponseEntity<UrlData>(info,HttpStatus.OK);
+      List<String> urls=jsoupurldto.getUrls();
       
-     
+      for(String url:urls) {
+         try {
+            
+            getDatabyJsoup data=new getDatabyJsoup();
+            UrlData info=null;
+            
+            info = data.getUrlMetaData(url);
+            //double insertion happend if clicking same note to update 
+            noteService.saveNoteUrl(info,jsoupurldto.getNoteId());  
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
+      return new ResponseEntity<List>(HttpStatus.OK);  
    }
    
 }

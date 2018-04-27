@@ -3,6 +3,7 @@ package com.fundoonotes.noteservice;
 import java.util.List;
 
 import com.fundoonotes.userservice.UserDTO;
+import com.fundoonotes.utilservice.UrlData;
 
 public interface NotesDao {
 
@@ -37,6 +38,10 @@ public interface NotesDao {
    void deleteCollaborator(int noteId) throws Exception;
 
    boolean getRowFromCollaborator(int noteId, int userId);
+
+   void saveUrlDetails(UrlData info);
+
+   List<UrlData> getUrlByNoteId(int noteId);
 
 	
 }

@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
@@ -26,12 +27,11 @@ public class getDatabyJsoup
         
          e.printStackTrace();
       }
-      
+      try{
       Document document = Jsoup.connect(url).get();
-
+     
       Elements metaOgTitle = document.select("meta[property=og:title]");
-
-      // check og title if not availabe check title if not then set to empty string!
+      
       if (metaOgTitle != null) {
          title = metaOgTitle.attr("content");
 
@@ -40,14 +40,24 @@ public class getDatabyJsoup
 
          }
       }
+      
+         Elements metaOgImage = document.select("img[src~=(?i)\\.(png|jpe?g|gif)]");
+         Element image = metaOgImage.get(0);
+              
+        if (image != null) {
+           imageUrl = image.attr("src");         
+        }
 
-      Elements metaOgImage = document.select("meta[property=og:image]");
 
-      if (metaOgImage != null) {
-         imageUrl = metaOgImage.attr("content");         
+      }catch(Exception e) {
+         e.printStackTrace();
+      }finally {
+         
       }
       
-      return new UrlData(title, imageUrl,domain);
+      
+
+           return new UrlData(title, imageUrl,domain);
    }
    
 }
