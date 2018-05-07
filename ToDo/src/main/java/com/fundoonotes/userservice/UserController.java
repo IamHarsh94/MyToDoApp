@@ -1,5 +1,7 @@
 package com.fundoonotes.userservice;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.fundoonotes.exception.RegisterErrors;
+import com.fundoonotes.utilservice.EmailProperties;
 import com.fundoonotes.utilservice.UserValidation;
 
 /**
@@ -47,6 +50,8 @@ public class UserController
    @Autowired
    private UserValidation validator;
 
+   @Autowired
+   private EmailProperties emailService;
    /**
     * <p>
     * This rest API for new user registration with {@RequestMapping} to mapped
@@ -165,17 +170,19 @@ public class UserController
     * @param HttpServletRequest
     * @return ResponseEntity
     */
-   @RequestMapping(value = "sendEmail", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+   @RequestMapping(value = "forgotPassword", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> validateEmail(HttpServletRequest req, HttpServletResponse res, @RequestBody UserDTO DTOuser)
    {
 
+      System.out.print("forgot password me host name hai ye :"+req.getHeader("origin"));
       String url = req.getRequestURL().toString();
       String requestUrl = url.substring(0, url.lastIndexOf("/")) + "/resetPassword/";
 
       boolean isSent = userService.sendEmail(DTOuser.getUserEmail(), requestUrl);
 
       if (isSent) {
-         response.setMessage("Mail send successfully");
+         
+         response.setMessage("Mail send successfully to your email id");
          response.setStatusCode(200);
 
          return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CREATED);
@@ -199,32 +206,49 @@ public class UserController
     * 
     * @return redirect to login URL
     */
-   @RequestMapping(value = "resetPassword/{randomUUID}", method = RequestMethod.POST)
-   public ResponseEntity<?> resetPassword(@PathVariable("randomUUID") String userUUID, @RequestBody UserDTO DTOuser)
+   @RequestMapping(value = "resetPassword/{randomUUID}", method = RequestMethod.GET)
+   public void resetPassword( HttpServletResponse res,@PathVariable("randomUUID") String userUUID)
    {
-
       String email = userService.getEmailByUUID(userUUID);
-
+      
       if (email != null) {
-
-         DTOuser.setUserEmail(email);
-
-         boolean isReset = userService.resetPassword(DTOuser);
-
-         if (isReset) {
-            response.setMessage("password reset successfully");
-            response.setStatusCode(200);
-
-            return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
-         }
+            String hostUrl=emailService.getHost()+"/"+"resetpassword?userUUID="+userUUID;
+            System.out.println("hostUrl look like this"+hostUrl);
+            try {
+               res.sendRedirect(hostUrl);
+               
+            } catch (IOException e) {
+               LOGGER.error("Error while redirecting to reset poge", e);
+              
+            }   
       }
-
-      response.setMessage("password not reset try again");
-      response.setStatusCode(409);
-
-      return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.CONFLICT);
    }
-
+       
+   @RequestMapping(value = "changepassword/{randomUUID}", method = RequestMethod.POST)
+   public ResponseEntity<?> changepassword(@PathVariable("randomUUID") String userUUID, @RequestBody UserDTO DTOuser)
+   {
+      String email = userService.getEmailByUUID(userUUID);
+      
+           if (email != null) {
+      
+               DTOuser.setUserEmail(email);
+      
+             boolean isReset = userService.resetPassword(DTOuser);
+      
+               if (isReset) {
+                  response.setMessage("password reset successfully");
+                  response.setStatusCode(200);
+    
+                  return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
+               }
+          }
+      
+           response.setMessage("password not reset try again");
+           response.setStatusCode(409);
+     
+            return new ResponseEntity<CustomResponseDTO>(response, HttpStatus.OK);
+      
+   }
    /**
     * <p>
     * This rest API for get the loged user from db according to user id and

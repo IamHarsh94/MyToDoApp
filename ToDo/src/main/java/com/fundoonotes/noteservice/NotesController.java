@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.mail.Multipart;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +14,12 @@ import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.fundoonotes.userservice.CustomResponseDTO;
 import com.fundoonotes.userservice.IUserService;
 import com.fundoonotes.userservice.UserModel;
+import com.fundoonotes.utilservice.GetUrlDataJsoup;
 import com.fundoonotes.utilservice.UrlData;
-import com.fundoonotes.utilservice.getDatabyJsoup;
 
 /**
  * <p>
@@ -60,9 +55,10 @@ public class NotesController
     * @return Response Note DTo Object with HTTP status.
     */
    @RequestMapping(value="createNote",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
-   public ResponseEntity<?> createNote(@RequestBody CreateNoteDto newNoteDto,@RequestAttribute(name="userId") int userId)
+   public ResponseEntity<?> createNote(@RequestBody CreateNoteDto newNoteDto,HttpServletRequest req, @RequestAttribute(name="userId") int userId)
    {
 
+    //  System.out.print(req.getHeader("origin"));
       NoteResponseDto noteResObj= noteService.saveNote(newNoteDto, userId);
       return new ResponseEntity<NoteResponseDto>(noteResObj,HttpStatus.OK);
 
@@ -162,25 +158,30 @@ public class NotesController
    }
 
   
-   @RequestMapping(value="getdata",method =RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_VALUE)
-   public ResponseEntity<?> urlData(@RequestBody JsoupUrlDTO jsoupurldto ,HttpServletRequest req,@RequestAttribute(name="userId") int userId) 
+   @RequestMapping(value="getdata",method=RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_VALUE)
+   public List<UrlData> urlData(@RequestBody UrlResDTO urlDto,@RequestAttribute(name="userId") int userId) 
    {
-      List<String> urls=jsoupurldto.getUrls();
+       
+      List<String> urls=urlDto.getUrllist();
       
-      for(String url:urls) {
+      List<UrlData> listOfurls = new ArrayList<>();
+      
+      UrlData info= new UrlData();
+      for (String url : urls) {
          try {
             
-            getDatabyJsoup data=new getDatabyJsoup();
-            UrlData info=null;
-            
-            info = data.getUrlMetaData(url);
-            //double insertion happend if clicking same note to update 
-            noteService.saveNoteUrl(info,jsoupurldto.getNoteId());  
+            GetUrlDataJsoup data=new GetUrlDataJsoup();
+           
+            info = data.getMetaData(url);
+            info.setNodeId(urlDto.getNoteId());
+            listOfurls.add(info);   
          } catch (IOException e) {
             e.printStackTrace();
          }
-      }
-      return new ResponseEntity<List>(HttpStatus.OK);  
+      }  
+      return listOfurls;
    }
+
+
    
 }

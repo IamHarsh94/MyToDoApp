@@ -20,6 +20,7 @@ com/fundoonotes/utilservice/UserValidation.class
 com/fundoonotes/exception/GlobalExceptionHandler.class
 com/fundoonotes/noteservice/JsoupUrlDTO.class
 com/fundoonotes/noteservice/NoteResponseDto.class
+com/fundoonotes/utilservice/GetUrlDataJsoup.class
 com/fundoonotes/utilservice/TokenUtil.class
 com/fundoonotes/noteservice/NoteService.class
 com/fundoonotes/userservice/UserDaoImpl$MyMapper.class
@@ -39,8 +40,8 @@ com/fundoonotes/utilservice/DataBaseQueries.class
 com/fundoonotes/userservice/UserDTO.class
 com/fundoonotes/utilservice/CORSFilter.class
 com/fundoonotes/noteservice/notesDaoImpl.class
-com/fundoonotes/utilservice/getDatabyJsoup.class
 com/fundoonotes/noteservice/LabelResDTO.class
+com/fundoonotes/noteservice/UrlResDTO.class
 com/fundoonotes/noteservice/MyLabelMapperClass.class
 com/fundoonotes/utilservice/EncryptPassword.class
 com/fundoonotes/userservice/UserDaoImpl.class

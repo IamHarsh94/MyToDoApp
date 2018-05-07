@@ -55,11 +55,13 @@ public class UserDaoImpl implements IuserDao
 
       List<UserModel> list = jdbcTemplate.query(sql, new Object[] { UserEmail }, new MyMapper());
      
-     if(list.size()==0)
-      {
-        throw new UserNotExistException();
-     }
-      return list.get(0);
+//     
+//      if(list.size()==0)
+//      {
+//        throw new UserNotExistException();
+//      }
+//      return list.get(0);
+      return list.size() > 0 ? list.get(0) : null;
    }
 
    /**

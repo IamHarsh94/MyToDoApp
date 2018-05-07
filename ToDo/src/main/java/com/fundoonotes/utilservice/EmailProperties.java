@@ -4,6 +4,8 @@ public class EmailProperties {
 	String email;
 	String password;
 	String emailAddress;
+	String host;
+	
 	public String getEmailAddress() {
 		return emailAddress;
 	}
@@ -22,9 +24,18 @@ public class EmailProperties {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	@Override
+	
+	public String getHost()
+   {
+      return host;
+   }
+   public void setHost(String host)
+   {
+      this.host = host;
+   }
+   @Override
 	public String toString() {
-		return "EmailProperties [email=" + email + ", password=" + password + ", emailAddress=" + emailAddress
+		return "EmailProperties [host=" + host + ",email=" + email + ", password=" + password + ", emailAddress=" + emailAddress
 				+ "]";
 	}
 }

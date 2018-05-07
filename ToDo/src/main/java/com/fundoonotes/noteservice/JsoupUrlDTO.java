@@ -4,34 +4,19 @@ import java.util.List;
 
 public class JsoupUrlDTO
 {
-   private int noteId;
-   private List<String> urls;
+   private List<String> url;
 
-   public int getNoteId()
+   public List<String> getUrl()
    {
-      return noteId;
+      return url;
    }
 
-   public void setNoteId(int noteId)
+   public void setUrl(List<String> url)
    {
-      this.noteId = noteId;
+      this.url = url;
    }
 
-   public JsoupUrlDTO()
-   {
-    
-   }
-
-   public List<String> getUrls()
-   {
-      return urls;
-   }
-
-   public void setUrls(List<String> urls)
-   {
-      this.urls = urls;
-   }
-
+  
 
    
 }

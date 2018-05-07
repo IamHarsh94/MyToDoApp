@@ -39,9 +39,6 @@ public interface NotesDao {
 
    boolean getRowFromCollaborator(int noteId, int userId);
 
-   void saveUrlDetails(UrlData info);
+   boolean isCollaborate(int noteId);
 
-   List<UrlData> getUrlByNoteId(int noteId);
-
-	
 }

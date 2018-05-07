@@ -89,6 +89,7 @@
 		<property name="email" value="${userId}" />
 		<property name="password" value="${password}" />
 		<property name="emailAddress" value="${emailAddress:#{null}}" />
+		<property name="host" value="${host}"/>
 	</bean>
 	
 	<bean id="token" class="com.fundoonotes.utilservice.TokenUtil"/>

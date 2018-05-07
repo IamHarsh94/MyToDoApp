@@ -46,7 +46,6 @@ public class NoteResponseDto {
 	
 	private List<UserDTO> collaborators;
 	
-	private List<UrlData> urls;
 	public NoteResponseDto() {
 	   
 	}
@@ -64,17 +63,6 @@ public class NoteResponseDto {
 		this.ownerId=note.getOwnerId();
 		this.image=note.getImage();
 	}
-
-
-   public List<UrlData> getUrls()
-   {
-      return urls;
-   }
-
-   public void setUrls(List<UrlData> urls)
-   {
-      this.urls = urls;
-   }
 
    public int getOwnerId()
    {

@@ -6,6 +6,12 @@ public class UrlData
    
    private int nodeId;
    
+   private String title;
+   
+   private String imageUrl;
+  
+   private String domain;
+
    public int getNodeId()
    {
       return nodeId;
@@ -16,12 +22,7 @@ public class UrlData
       this.nodeId = nodeId;
    }
 
-   private String title;
-   
-   private String imageUrl;
   
-   private String domain;
-
    
    public UrlData()
    {

@@ -1,3 +1,4 @@
+/home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/GetUrlDataJsoup.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/IuserDao.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/UrlData.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/UserModel.java
@@ -16,6 +17,7 @@
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/exception/DatabaseException.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/UserDTO.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/UserServiceImpl.java
+/home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/noteservice/UrlResDTO.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/noteservice/CreateNoteDto.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/noteservice/NoteServiceImpl.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/noteservice/LabelDTO.java
@@ -33,7 +35,6 @@
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/CustomResponseDTO.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/sociallogin/FacebookLoginController.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/noteservice/LabelResDTO.java
-/home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/getDatabyJsoup.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/utilservice/MailService.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/noteservice/notesDaoImpl.java
 /home/bridgeit/Documents/workspace-sts-3.9.2.RELEASE/ToDo/src/main/java/com/fundoonotes/userservice/IUserService.java
