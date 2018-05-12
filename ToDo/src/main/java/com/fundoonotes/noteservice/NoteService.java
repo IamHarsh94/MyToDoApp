@@ -27,6 +27,10 @@ public interface NoteService {
    UserModel addRemoveCollaborator(CollaboratorReqDTO personReqDTO, int userId);
 
    void uploadImage(UpdateNoteDto imageReqDTO, int userId);
+
+   void deleteLabel(LabelDTO labelObj);
+
+   void updateLabel(LabelDTO labelObj);
 	
 	
 	

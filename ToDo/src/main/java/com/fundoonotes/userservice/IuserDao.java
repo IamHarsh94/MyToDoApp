@@ -1,6 +1,5 @@
 package com.fundoonotes.userservice;
 
-import com.fundoonotes.noteservice.CollaboratorReqDTO;
 
 public interface IuserDao 
 {

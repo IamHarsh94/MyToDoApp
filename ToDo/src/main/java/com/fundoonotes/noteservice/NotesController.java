@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -91,10 +92,20 @@ public class NotesController
    @RequestMapping(value="createLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> createLabel(@RequestBody  LabelDTO labelObj,@RequestAttribute(name="userId") int userId)
    {
-      noteService.saveLabel(labelObj, userId);
-      return new ResponseEntity<>(HttpStatus.OK);
+      if(labelObj.deleteLabel) {
+         noteService.deleteLabel(labelObj);
+      }else {
+          noteService.saveLabel(labelObj, userId);
+      }
+        return new ResponseEntity<>(HttpStatus.OK);
    }
-
+   
+   @RequestMapping(value="updateLabel",method =RequestMethod.PUT ,produces = MediaType.APPLICATION_JSON_VALUE)
+   public ResponseEntity<?> updateLabel(@RequestBody  LabelDTO labelObj,@RequestAttribute(name="userId") int userId)
+   {
+         noteService.updateLabel(labelObj);
+        return new ResponseEntity<>(HttpStatus.OK);
+   }
 
    @RequestMapping(value="getLabels",method =RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> getlabels(HttpServletRequest req,@RequestAttribute(name="userId") int userId)

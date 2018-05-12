@@ -283,6 +283,65 @@ public class notesDaoImpl implements NotesDao{
       return list.size() > 0 ? list.get(0) : null;
    }
    
+   public boolean getLabel_Note(int labelId) {
+      String sql="select * from Note_Label where labelId=?";
+      List<AddRemoveLabelDTO> list = jdbcTemplate.query(sql, new Object[] {labelId}, new GetLabelNote());
+      
+      return list.size() > 0 ? true : false;
+   }
+   
+   public void deleteMappingLabelNote(int labelId) {
+       String sql="delete from Note_Label where labelId=?";
+       
+       int num=jdbcTemplate.update(sql, new Object[] { labelId});
+       
+       if(num==0)
+       {
+         throw new DatabaseException();
+       }
+   }
+  
+   @Override
+   public void deleteLabelByUserId(LabelDTO labelObj)
+   {
+     if(getLabel_Note(labelObj.getLabelId())) {
+        deleteMappingLabelNote(labelObj.getLabelId());
+     }
+     
+     String sql="delete from LABEL where labelId=? and userId=?";
+     int num=jdbcTemplate.update(sql, new Object[] { labelObj.getLabelId(),labelObj.getUser().getId()});
+     
+     if(num==0)
+     {
+       throw new DatabaseException();
+     }
+      
+   }
+
+   @Override
+   public void updateLabelByLabelId(LabelDTO labelObj)
+   {
+     String sql="update LABEL set labelTitle=? where labelId=?";
+     int num=jdbcTemplate.update(sql, new Object[] { labelObj.getLabelTitle(),labelObj.getLabelId()});
+     
+     if(num==0)
+     {
+       throw new DatabaseException();
+     }
+      
+   }
+   
+}
+
+class GetLabelNote implements org.springframework.jdbc.core.RowMapper<AddRemoveLabelDTO>
+{
+   public AddRemoveLabelDTO mapRow(ResultSet rs, int rowNum) throws SQLException
+   {
+      AddRemoveLabelDTO NoteLabel = new AddRemoveLabelDTO();
+      NoteLabel.setLabelId(rs.getInt("labelId"));
+      NoteLabel.setNoteId(rs.getInt("noteId"));
+      return NoteLabel;
+   }
 }
 
 class GetCollaborators implements org.springframework.jdbc.core.RowMapper<UserDTO>

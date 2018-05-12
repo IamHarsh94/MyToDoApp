@@ -41,4 +41,8 @@ public interface NotesDao {
 
    boolean isCollaborate(int noteId);
 
+   void deleteLabelByUserId(LabelDTO labelObj);
+
+   void updateLabelByLabelId(LabelDTO labelObj);
+
 }

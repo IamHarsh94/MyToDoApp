@@ -198,6 +198,20 @@ public class NoteServiceImpl implements NoteService {
       
    }
 
+   @Override
+   public void deleteLabel(LabelDTO labelObj)
+   {
+      noteDao.deleteLabelByUserId(labelObj);
+      
+   }
+
+   @Override
+   public void updateLabel(LabelDTO labelObj)
+   {
+      noteDao.updateLabelByLabelId(labelObj);
+      
+   }
+
 
 
 

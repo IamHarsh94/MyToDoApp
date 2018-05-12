@@ -7,9 +7,17 @@ public class LabelDTO {
 	public int labelId;
 	public String labelTitle;
 	public UserModel user;
+	public boolean deleteLabel;
 	
-	
-	public int getLabelId() {
+	public boolean isDeleteLabel()
+   {
+      return deleteLabel;
+   }
+   public void setDeleteLabel(boolean deleteLabel)
+   {
+      this.deleteLabel = deleteLabel;
+   }
+   public int getLabelId() {
 		return labelId;
 	}
 	public void setLabelId(int labelId) {

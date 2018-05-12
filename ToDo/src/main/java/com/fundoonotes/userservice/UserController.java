@@ -173,8 +173,7 @@ public class UserController
    @RequestMapping(value = "forgotPassword", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
    public ResponseEntity<?> validateEmail(HttpServletRequest req, HttpServletResponse res, @RequestBody UserDTO DTOuser)
    {
-
-      System.out.print("forgot password me host name hai ye :"+req.getHeader("origin"));
+      
       String url = req.getRequestURL().toString();
       String requestUrl = url.substring(0, url.lastIndexOf("/")) + "/resetPassword/";
 
@@ -213,7 +212,6 @@ public class UserController
       
       if (email != null) {
             String hostUrl=emailService.getHost()+"/"+"resetpassword?userUUID="+userUUID;
-            System.out.println("hostUrl look like this"+hostUrl);
             try {
                res.sendRedirect(hostUrl);
                
